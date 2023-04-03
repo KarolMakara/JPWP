@@ -4,5 +4,5 @@ from django.db.models import *
 
 
 class MyUser(AbstractUser):
-    email = CharField(unique=True)
+    email = CharField(unique=False)
     pass
