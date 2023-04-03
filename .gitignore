@@ -1,5 +1,6 @@
 JPWP/key.py
 venv/
+.idea/
 **/__pycache__/
 **/.idea/workspace.xml
 **/.idea/tasks.xml
