@@ -1,0 +1,9 @@
+JPWP/key.py
+git_usefull_commands.txt
+venv/
+.idea/
+*.txt
+*.swp
+**/__pycache__/
+
+
