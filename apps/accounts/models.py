@@ -1,13 +1,13 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.db.models import *
-from apps.tasks.models import Task, GroupTask
+#from apps.tasks.models import Task, UserTaskList#, GroupTask
 
 
 class MyUser(AbstractUser):
-    task = models.ForeignKey(Task, on_delete=models.CASCADE, null=True, blank=True)
-
-    group_tasks = models.ManyToManyField(GroupTask, related_name='users', blank=True)
+    #user_task_list = models.OneToOneField
+    pass
+    #group_tasks = models.ManyToManyField(GroupTask, related_name='users', blank=True)
 
 
 # class MyUserCreationForm(UserCreationForm):

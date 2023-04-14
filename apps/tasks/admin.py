@@ -1,5 +1,5 @@
 from django.contrib import admin
-from apps.tasks.models import Task, GroupTask, Group
+from apps.tasks.models import Task, UserTaskList, UserTask
 
 
 # Register your models here.
@@ -8,14 +8,14 @@ class TaskAdmin(admin.ModelAdmin):
     pass
 
 
-class GroupAdmin(admin.ModelAdmin):
+class UserTaskAdmin(admin.ModelAdmin):
     pass
 
 
-class GroupTaskAdmin(admin.ModelAdmin):
+class UserTaskListTaskAdmin(admin.ModelAdmin):
     pass
 
 
 admin.site.register(Task, TaskAdmin)
-admin.site.register(Group, GroupAdmin)
-admin.site.register(GroupTask, GroupTaskAdmin)
+admin.site.register(UserTask, UserTaskAdmin)
+admin.site.register(UserTaskList, UserTaskListTaskAdmin)
