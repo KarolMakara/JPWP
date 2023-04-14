@@ -7,5 +7,5 @@ materials/
 *.txt
 *.swp
 **/__pycache__/
-
+migrations.sh
 
