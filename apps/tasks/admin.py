@@ -1,21 +1,24 @@
 from django.contrib import admin
-from apps.tasks.models import Task, UserTaskList, UserTask
-
-
-# Register your models here.
-
-class TaskAdmin(admin.ModelAdmin):
-    pass
+from apps.tasks.models import UserTaskList, UserTask, GroupTask, GroupTaskList
 
 
 class UserTaskAdmin(admin.ModelAdmin):
     pass
 
 
-class UserTaskListTaskAdmin(admin.ModelAdmin):
+class UserTaskListAdmin(admin.ModelAdmin):
     pass
 
 
-admin.site.register(Task, TaskAdmin)
+class GroupTaskAdmin(admin.ModelAdmin):
+    pass
+
+
+class GroupTaskListAdmin(admin.ModelAdmin):
+    pass
+
+
 admin.site.register(UserTask, UserTaskAdmin)
-admin.site.register(UserTaskList, UserTaskListTaskAdmin)
+admin.site.register(UserTaskList, UserTaskListAdmin)
+admin.site.register(GroupTask, GroupTaskAdmin)
+admin.site.register(GroupTaskList, GroupTaskListAdmin)

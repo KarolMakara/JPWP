@@ -1,5 +1,5 @@
 from django.db import models
-from apps.accounts.models import MyUser
+from apps.accounts.models import MyUser, MyGroup
 from JPWP import settings
 
 
@@ -17,12 +17,15 @@ class Task(models.Model):
         return self.name
 
 
-class UserTaskList(models.Model):
+class TaskList(models.Model):
     title = models.CharField(max_length=100, unique=True)
-    owner = models.OneToOneField(MyUser, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.title
+
+
+class UserTaskList(TaskList):
+    owner = models.ForeignKey(MyUser, on_delete=models.CASCADE)
 
 
 class UserTask(Task):
@@ -31,6 +34,16 @@ class UserTask(Task):
     def __str__(self):
         return self.name
 
+
+class GroupTaskList(TaskList):
+    for_group = models.OneToOneField(MyGroup, on_delete=models.CASCADE)
+
+
+class GroupTask(Task):
+    group_task_list = models.ForeignKey(GroupTaskList, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.name
 
 # class Group(models.Model):
 #     name = models.CharField(max_length=50)
