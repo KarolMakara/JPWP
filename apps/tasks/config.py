@@ -7,5 +7,5 @@ from django.apps import AppConfig
 
 
 class AuthConfig(AppConfig):
-    name = 'apps.authentication'
-    label = 'apps_authentication'
+    name = 'apps.tasks'
+    label = 'apps_tasks'

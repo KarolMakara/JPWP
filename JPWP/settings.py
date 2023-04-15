@@ -26,7 +26,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'apps.home',
     'apps.authentication',
-    'apps.accounts'
+    'apps.accounts',
+    'apps.tasks'
 ]
 
 MIDDLEWARE = [
@@ -101,3 +102,4 @@ STATICFILES_DIRS = (
     os.path.join(JPWP_DIR, 'apps/static'),
 )
 
+AUTH_USER_MODEL = 'accounts.MyUser'
