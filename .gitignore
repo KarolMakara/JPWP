@@ -2,6 +2,7 @@ JPWP/key.py
 git_usefull_commands.txt
 venv/
 db.sqlite3
+*.sqlite3
 materials/
 .idea/
 *.txt

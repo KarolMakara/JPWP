@@ -3,7 +3,7 @@
 {% block title %} Dashboard {% endblock %} 
 
 <!-- Specific Page CSS goes HERE  -->
-{% block stylesheets %}{% endblock stylesheets %}
+
 
 
 {% block content %}
@@ -67,7 +67,7 @@
           <div class="card-header card-header-primary">
           </div>
           <div class="card-body">
-            <h4 class="card-title">Day callendar.</h4>
+            <h4 class="card-title">Daily calendar.</h4>
           </div>
         </div>
       </div>
@@ -77,7 +77,7 @@
           <div class="card-header card-header-primary">
           </div>
           <div class="card-body">
-            <h4 class="card-title">Week callendar.</h4>
+            <h4 class="card-title">Weekly calendar.</h4>
           </div>
         </div>
       </div>
@@ -86,7 +86,7 @@
           <div class="card-header card-header-primary">
           </div>
           <div class="card-body">
-            <h4 class="card-title">Month callendar.</h4>
+            <h4 class="card-title">Monthly calendar.</h4>
           </div>
         </div>
       </div>
@@ -95,7 +95,7 @@
           <div class="card-header card-header-primary">
           </div>
           <div class="card-body">
-            <h4 class="card-title">Year callendar.</h4>
+            <h4 class="card-title">Yearly calendar.</h4>
           </div>
         </div>
       </div>
@@ -113,6 +113,9 @@
     
 {% endblock content %}
 
+{% block stylesheets %}
+</style>
+{% endblock stylesheets %}
 <!-- Specific Page JS goes HERE  -->
 {% block javascripts %}
 
@@ -123,9 +126,6 @@
       md.initDashboardPageCharts();
 
     });
-
-    
-
 
   </script>
 
