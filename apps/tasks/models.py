@@ -1,4 +1,6 @@
 from django.db import models
+from django.urls import reverse
+
 from apps.accounts.models import MyUser, MyGroup
 from JPWP import settings
 
@@ -8,7 +10,7 @@ class Task(models.Model):
     description = models.TextField()
     created_at = models.DateField(auto_now_add=True)
     modified_at = models.DateField(auto_now=True)
-    due_date = models.DateField()
+    due_date = models.DateField(blank=True, null=True)
     to_do = models.BooleanField(default=True)
     in_progress = models.BooleanField(default=False)
     completed = models.BooleanField(default=False)
@@ -18,10 +20,10 @@ class Task(models.Model):
 
 
 class TaskList(models.Model):
-    title = models.CharField(max_length=100, unique=True)
+    name = models.CharField(max_length=100, null=True)
 
     def __str__(self):
-        return self.title
+        return self.name
 
 
 class UserTaskList(TaskList):

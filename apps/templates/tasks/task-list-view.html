@@ -1,0 +1,148 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Dashboard {% endblock %} 
+
+<!-- Specific Page CSS goes HERE  -->
+
+{% block stylesheets %}
+
+{% endblock stylesheets %}
+
+<!-- user_task_lists, user_task_names -->
+
+
+
+
+{% block content %}
+<!-- <h1>Your task lists:</h1>
+<div class="row">
+
+    {% for name in user_task_names %}
+        <div class="col-md-2">
+               <button type="button" class="btn btn-primary">
+                <p>{{ name }}</p>
+               </button> 
+        </div>
+    {% endfor %}
+</div> -->
+
+<div class="row">
+    <div class="col-lg-12 col-md-12">
+      <div class="card">
+        <div class="card-header card-header-tabs card-header-primary">
+          <div class="nav-tabs-navigation">
+            <div class="nav-tabs-wrapper">
+              <span class="nav-tabs-title"></span>
+              <ul class="nav nav-tabs" data-tabs="tabs" style="display: flex; justify-content: center; align-items: center;">
+                    <li style="margin: 0 auto;" class="nav-item col-sm-6 col-md-4 col-lg-3">
+                        <form action="{% url 'task_list_add' %}" method="get">
+                             <button type="submit" name="task-add" class="btn btn-white text-dark" style="width: 100%">
+                                Add Task List
+                            </button>
+                        </form>
+                    </li>
+                    <li style="margin: 0 auto;" class="nav-item col-sm-6 col-md-4 col-lg-3">
+                        <form action="" method="get">
+                             <button type="submit" name="task-edit" class="btn btn-white text-dark" style="width: 100%">
+                                Edit Task List
+                            </button>
+                        </form>
+                    </li>
+                    <li style="margin: 0 auto;" class="nav-item col-sm-6 col-md-4 col-lg-3">
+                        <form action="" method="get">
+                             <button type="submit" name="task-delete" class="btn btn-white text-dark" style="width: 100%">
+                                Delete Task List
+                            </button>
+                        </form>
+                    </li>
+             </ul>
+            </div>
+          </div>
+        </div>
+        <div class="card-body"></div>
+      </div>
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-lg-12 col-md-12">
+      <div class="card">
+        <div class="card-header card-header-tabs card-header-primary">
+          <div class="nav-tabs-navigation">
+            <div class="nav-tabs-wrapper">
+              <span class="nav-tabs-title"></span>
+              <ul class="nav nav-tabs" data-tabs="tabs" style="display: flex; justify-content: center; align-items: center;">
+
+                {% for list in user_task_lists %}
+                    <li style="margin: 0 auto;" class="nav-item col-sm-6 col-md-4 col-lg-3 {% if forloop.last %} last{% endif %}{% if forloop.counter0|divisibleby:num_per_row %} first{% endif %}">
+                        <form action="{% url 'tasks' task_list_id=list.id %}" method="get">
+                            {% csrf_token %}
+                             <button type="submit" name="{{ name }}" class="btn btn-white text-dark" style="width: 100%">
+                                {{ list.name }}
+                            </button>
+                        </form>
+                    </li>
+                {% endfor %}
+
+             </ul>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="tab-content">
+                {% for task in user_tasks %}
+                    <div class="tab-pane active" id="profile">
+                        <table class="table">
+                        <tbody>
+                            <tr>
+                            <td style="width: 20px">
+                                <div class="form-check">
+                                <label class="form-check-label">
+                                    <input class="form-check-input" type="checkbox" value="">
+                                    <span class="form-check-sign">
+                                    <span class="check"></span>
+                                    </span>
+                                </label>
+                                </div>
+                            </td>
+                            <td>{{ task.name }}</td>
+                            <td class="td-actions justify-content-end">
+
+                                <button type="button" rel="tooltip" title="Edit Task" class="btn btn-primary btn-link btn-sm">
+                                    <i class="material-icons">edit</i>
+                                </button>
+                                
+                                <button type="button" rel="tooltip" title="Remove" class="btn btn-danger btn-link btn-sm">
+                                    <i class="material-icons">close</i>
+                                </button>
+
+                            </td>
+                            </tr>
+                        </tbody>
+                        </table>
+                    </div>
+                {% endfor %}
+                <form action="{% url 'task_add' task_list_id=current_task_list_id %}" method="">
+                    <button type="submit" name="task-add" class="btn btn-primary text-dark" style="width: 100%">
+                       Add Task
+                   </button>
+               </form>    
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
+    
+
+    
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+
+  <script>
+    var taskListName = document.getElementById("task-list-name")
+  </script>
+
+{% endblock javascripts %}
