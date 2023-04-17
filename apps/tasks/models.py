@@ -1,5 +1,6 @@
 from django.db import models
 from django.urls import reverse
+from django.utils import timezone
 
 from apps.accounts.models import MyUser, MyGroup
 from JPWP import settings
@@ -10,6 +11,7 @@ class Task(models.Model):
     description = models.TextField()
     created_at = models.DateField(auto_now_add=True)
     modified_at = models.DateField(auto_now=True)
+    completed_at = models.BooleanField(null=True)
     due_date = models.DateField(blank=True, null=True)
     to_do = models.BooleanField(default=True)
     in_progress = models.BooleanField(default=False)
