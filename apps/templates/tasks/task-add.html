@@ -1,0 +1,76 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Task Add {% endblock %} 
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header card-header-primary d-flex justify-content-center">
+          <h4 class="card-title">
+            {{ task_list_name }}
+          </h4>
+        </div>
+        <div class="card-body">
+
+            <form role="form" method="post" action="">
+                
+                {% csrf_token %} 
+  
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label class="bmd-label-floating">Name:</label>
+                            {{ form.name }}
+                        </div>
+                        <span class="text-danger">{{ form.name.errors }}</span>
+                    </div>
+                </div>
+                
+  
+                <br />
+  
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="form-group">
+                        <label class="bmd-label-floating">Description:</label>
+                        {{ form.description }}
+                    </div>
+                  </div>
+                </div>
+                <span class="text-danger">{{ form.description.errors }}</span>
+  
+                <br />
+  
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="form-group">
+                        <label class="bmd-label-floating">Deadline:</label>
+                        <br />
+                        {{ form.due_date }}
+                    </div>
+                  </div>
+                </div>
+                <span class="text-danger">{{ form.due_date.errors }}</span>
+  
+  
+                <button type="submit" name="task-add" class="btn btn-primary pull-right">Add Task</button>
+  
+  
+                <div class="clearfix"></div>
+  
+              </form>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}{% endblock javascripts %}
