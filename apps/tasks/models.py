@@ -1,24 +1,38 @@
+from datetime import timedelta
+
 from django.db import models
 from django.urls import reverse
 from django.utils import timezone
+from django.utils.datetime_safe import date
 
 from apps.accounts.models import MyUser, MyGroup
-from JPWP import settings
 
 
 class Task(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField()
-    created_at = models.DateField(auto_now_add=True)
-    modified_at = models.DateField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    modified_at = models.DateTimeField(auto_now=True)
     completed_at = models.BooleanField(null=True)
-    due_date = models.DateField(blank=True, null=True)
+    due_date = models.DateTimeField(blank=True, null=True)
     to_do = models.BooleanField(default=True)
     in_progress = models.BooleanField(default=False)
     completed = models.BooleanField(default=False)
 
     def __str__(self):
         return self.name
+
+    @property
+    def is_past_due(self):
+        if self.due_date == "":
+            return
+        return timezone.now() > self.due_date
+
+    @property
+    def upcoming(self):
+        if self.due_date is None or self.due_date == "":
+            return
+        return timezone.now() + timedelta(days=2) > self.due_date
 
 
 class TaskList(models.Model):

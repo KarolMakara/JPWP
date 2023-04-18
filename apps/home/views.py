@@ -10,28 +10,22 @@ from django.shortcuts import render
 from django.template import loader
 from django.urls import reverse
 from apps.tasks.models import UserTaskList, UserTask, Task, GroupTaskList, GroupTask
+from apps.tasks.views import last_modified_at_for_task_status
 
 
 @login_required(login_url="login/")
 def index(request):
-
-    return render(request, 'home/index.html')
-
-    context = {'segment': 'index'}
-
-    html_template = loader.get_template('home/index.html')
-    return HttpResponse(html_template.render(context, request))
+    last_modified_at = last_modified_at_for_task_status(request)
+    return render(request, 'home/index.html', {'last_modified_to_do': last_modified_at[0],
+                                               'last_modified_in_progress': last_modified_at[1],
+                                               'last_modified_completed': last_modified_at[2]})
 
 
 @login_required(login_url="login/")
 def pages(request):
     context = {}
-    # All resource paths end in .html.
-    # Pick out the html file name from the url. And load that template.
     try:
-        print(request.path)
         load_template = request.path.split('/')[1]
-        print(load_template)
         if load_template == 'admin':
             return HttpResponseRedirect(reverse('admin:index'))
         context['segment'] = load_template

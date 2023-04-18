@@ -24,10 +24,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.humanize',
     'apps.home',
     'apps.authentication',
     'apps.accounts',
-    'apps.tasks'
+    'apps.tasks',
 ]
 
 MIDDLEWARE = [
@@ -84,13 +85,20 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'CET'
+LANGUAGE_CODE = 'en-us'
+USE_TZ = True
+TIME_ZONE = 'Europe/Warsaw'
+
+USE_L10N = False
+
+DATETIME_FORMAT = 'N j, Y, H:i'
+
+DATE_FORMAT = '%m/%d/%Y'
+TIME_FORMAT = '%H:%M'
 
 USE_I18N = True
 
-USE_TZ = True
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 

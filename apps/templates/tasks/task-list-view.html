@@ -115,25 +115,46 @@
                                   </label>
                                   </div>
                               </td>
+                              
+                              {% if task.is_past_due %}
+                              <td class="col-md-8" style="color: red">{{ task.name }}</td>
+                              <td class="overdue col-md-2" style="color: red">{{ task.due_date|date:"H:i M d, Y"}}</td>
+                              {% elif task.upcoming %}
+                              <td class="col-md-8" style="color: orange">{{ task.name }}</td>
+                              <td class="overdue col-md-2" style="color: orange">{{ task.due_date|date:"H:i M d, Y"}}</td>
+                              {% else %}
                               <td class="col-md-8">{{ task.name }}</td>
-                              <td class="col-md-2">{{ task.due_date }}</td>
+                              <td class="col-md-2">{{ task.due_date|date:"H:i M d, Y"}}</td>
+                              {% endif %}
                               <td class="td-actions justify-content-end col-md-4 pull-right">
-                                  <button type="button" rel="tooltip" title="Edit Task" class="btn btn-primary btn-link btn-sm">
+
+                                
+                                {% with task_id=task.id %}
+                                  <form action="{% url 'task_edit' user_task_list_id=current_task_list_id user_task_id=task_id task_status='lists' %}" method="GET">
+                                    {% csrf_token %}
+                                    <button type="submit" name="task-del" rel="tooltip" title="Edit Task" class="btn btn-primary btn-link btn-sm">
                                       <i class="material-icons">edit</i>
-                                  </button>
-                                  
-                                  <button type="button" rel="tooltip" title="Remove" class="btn btn-danger btn-link btn-sm">
+                                    </button>
+                                  </form> 
+                                {% endwith %}
+
+                                {% with task_id=task.id %}
+                                  <form action="{% url 'task_delete' user_task_list_id=current_task_list_id user_task_id=task_id task_status='lists' %}" method="PATCH">
+                                    {% csrf_token %}
+                                    <button type="submit" rel="tooltip" title="Remove" class="remove btn btn-danger btn-link btn-sm">
                                       <i class="material-icons">close</i>
-                                  </button>
+                                    </button>
+                                  </form>
+                                {% endwith %}
+                                  
                               </td>
                               </tr>
                           
                   {% endfor %} 
                 </tbody>
                 </table>
-
-                <form action="{% url 'task_add' task_list_id=current_task_list_id %}" method="">
-                    <button type="submit" name="task-add" class="btn btn-primary" style="width: 100%">
+                <form action="{% url 'task_add' task_list_id=current_task_list_id task_status='lists' %}" method="">
+                    <button type="submit" name="task-add" class="btn btn-primary text-dark" style="width: 100%">
                        Add Task
                    </button>
                </form>    
@@ -149,9 +170,9 @@
 
 <!-- Specific Page JS goes HERE  -->
 {% block javascripts %}
-
-  <script>
-    var taskListName = document.getElementById("task-list-name")
+<script>
+  $(document).on('click', '.remove', function(){
+  return confirm('Are you sure you want to update this?');
+  })
   </script>
-
 {% endblock javascripts %}
