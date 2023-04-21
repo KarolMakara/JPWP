@@ -1,12 +1,10 @@
-from bootstrap_datepicker_plus.widgets import DateTimePickerInput
 from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
-from django.db.models import F
-from django.utils import timezone
-from django.views import generic
+from django.template.loader import render_to_string
 
 from apps.tasks.forms import UserTaskForm
-from apps.tasks.models import UserTaskList, UserTask, GroupTaskList, GroupTask, Task
+from apps.tasks.models import UserTaskList, UserTask, GroupTaskList, GroupTask, Task, Notification
 
 
 def last_modified_at_for_task_status(request):
@@ -17,8 +15,10 @@ def last_modified_at_for_task_status(request):
     completed_tasks = []
     for task_list in task_lists:
         to_do_tasks.extend(get_tasks_from_query_set(UserTask.objects.filter(user_task_list=task_list, to_do=True)))
-        in_progress_tasks.extend(get_tasks_from_query_set(UserTask.objects.filter(user_task_list=task_list, in_progress=True)))
-        completed_tasks.extend(get_tasks_from_query_set(UserTask.objects.filter(user_task_list=task_list, completed=True)))
+        in_progress_tasks.extend(
+            get_tasks_from_query_set(UserTask.objects.filter(user_task_list=task_list, in_progress=True)))
+        completed_tasks.extend(
+            get_tasks_from_query_set(UserTask.objects.filter(user_task_list=task_list, completed=True)))
     to_do_tasks = sort_and_update_tasks(to_do_tasks, 'modified_at', True)
     in_progress_tasks = sort_and_update_tasks(in_progress_tasks, 'modified_at', True)
     completed_tasks = sort_and_update_tasks(completed_tasks, 'modified_at', True)
@@ -86,7 +86,7 @@ def task_add(request, task_list_id, task_status):
             if task_status != 'lists':
                 return redirect('/' + task_status)
             else:
-                return redirect('/task-list/' + str(task_list_id) + '/')
+                return redirect('/task-list/' + str(task_list_id))
 
     return render(request, 'tasks/task-add.html', {'form': UserTaskForm(), 'task_list_name': task_list_name})
 
@@ -102,7 +102,7 @@ def task_edit(request, user_task_list_id, user_task_id, task_status):
             if task_status != 'lists':
                 return redirect('/' + task_status)
             else:
-                return redirect('/task-list/' + str(task.user_task_list.id) + '/')
+                return redirect('/task-list/' + str(task.user_task_list.id))
     else:
         form = UserTaskForm(instance=task)
 
@@ -113,11 +113,13 @@ def task_edit(request, user_task_list_id, user_task_id, task_status):
 def task_del(request, user_task_list_id, user_task_id, task_status):
     task_list = get_object_or_404(UserTaskList, id=user_task_list_id)
     task = get_object_or_404(UserTask, id=user_task_id, user_task_list=task_list)
+    notification = get_object_or_404(Notification, task=task)
+    notification.delete()
     task.delete()
     if task_status != 'lists':
         return redirect('/' + task_status)
     else:
-        return redirect('/task-list/' + str(task.user_task_list.id) + '/')
+        return redirect('/task-list/' + str(task.user_task_list.id))
 
 
 @login_required(login_url="login/")
@@ -185,3 +187,11 @@ def weekly_view(request):
 
 def monthly_view(request):
     return render(request, 'tasks/monthly-view.html')
+
+
+def notification_view(request, notification_id):
+    notification = Notification.objects.get(id=notification_id, seen=False)
+    notification.seen = True
+    notification.save()
+    return render(request, 'tasks/notification.html', {'notification': notification})
+

@@ -4,7 +4,7 @@ Copyright (c) 2019 - present AppSeed.us
 """
 
 from django.urls import path
-from apps.tasks import views
+from apps.tasks import views, notifications
 
 urlpatterns = [
     path('task-list', views.default_task_view, name='tasks'),
@@ -19,5 +19,5 @@ urlpatterns = [
     path('daily-view', views.daily_view, name='daily_view'),
     path('weekly-view', views.weekly_view, name='weekly_view'),
     path('monthly-view', views.monthly_view, name='monthly_view'),
-
+    path('notifications/send/<int:notification_id>/', views.notification_view, name='notification_view'),
 ]

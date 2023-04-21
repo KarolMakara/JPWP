@@ -1,5 +1,9 @@
 import os
+from datetime import timedelta
 from pathlib import Path
+
+from celery.schedules import crontab
+
 from JPWP.key import secret
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -25,6 +29,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.humanize',
+    'django_celery_results',
+    'django_celery_beat',
     'apps.home',
     'apps.authentication',
     'apps.accounts',
@@ -111,3 +117,13 @@ STATICFILES_DIRS = (
 )
 
 AUTH_USER_MODEL = 'accounts.MyUser'
+
+CELERY_BROKER_URL = 'redis://localhost:6379/0'
+CELERY_RESULT_BACKEND = 'django-db'
+
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+
+CELERT_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
+

@@ -1,1 +1,14 @@
-
+<table class="table">
+    <tbody>
+        <tr>
+            <td class="td-actions justify-content-end col-md-4 pull-right">
+                <form action="{% url 'task_delete' user_task_list_id=current_task_list_id user_task_id=task_id task_status='tasks-in-progress' %}" method="DELETE">
+                    {% csrf_token %}
+                    <button type="submit" rel="tooltip" title="Remove" class="remove btn btn-danger btn-link btn-sm">
+                          <i class="material-icons">close</i>
+                    </button>
+                </form>
+            </td>
+        </tr>
+    </tbody>
+</table>
