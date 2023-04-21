@@ -21,7 +21,7 @@
     <div class="col-lg-12 col-md-12">
       <div class="card">
         <div class="card-header card-header-tabs card-header-success">
-          <h1 class="text-center font-weight-bold">To do tasks</h1>
+          <h1 class="text-center font-weight-bold">Done Tasks</h1>
         </div>
         <div class="card-body">
           <div class="tab-content">
@@ -49,7 +49,7 @@
                                 </div>
                             </td>
                             <td class="col-md-8">{{ task.name }}</td>
-                            <td class="col-md-2">{{ task.completed_at }}</td>
+                            <td class="col-md-2">{{ task.due_date|date:"M d, Y"}}</td>
                             <td class="td-actions justify-content-end col-md-4 pull-right">
                                 <button type="button" rel="tooltip" title="Edit Task" class="btn btn-success btn-link btn-sm">
                                     <i class="material-icons">edit</i>

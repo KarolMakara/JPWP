@@ -1,9 +1,33 @@
 from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
-from django.db.models import F
+from django.template.loader import render_to_string
 
 from apps.tasks.forms import UserTaskForm
-from apps.tasks.models import UserTaskList, UserTask, GroupTaskList, GroupTask, Task
+from apps.tasks.models import UserTaskList, UserTask, GroupTaskList, GroupTask, Task, Notification
+
+
+def last_modified_at_for_task_status(request):
+    user = request.user
+    task_lists = UserTaskList.objects.filter(owner=user.id)
+    to_do_tasks = []
+    in_progress_tasks = []
+    completed_tasks = []
+    for task_list in task_lists:
+        to_do_tasks.extend(get_tasks_from_query_set(UserTask.objects.filter(user_task_list=task_list, to_do=True)))
+        in_progress_tasks.extend(
+            get_tasks_from_query_set(UserTask.objects.filter(user_task_list=task_list, in_progress=True)))
+        completed_tasks.extend(
+            get_tasks_from_query_set(UserTask.objects.filter(user_task_list=task_list, completed=True)))
+    to_do_tasks = sort_and_update_tasks(to_do_tasks, 'modified_at', True)
+    in_progress_tasks = sort_and_update_tasks(in_progress_tasks, 'modified_at', True)
+    completed_tasks = sort_and_update_tasks(completed_tasks, 'modified_at', True)
+
+    return to_do_tasks[0].modified_at, in_progress_tasks[0].modified_at, completed_tasks[0].modified_at
+
+
+def get_tasks_from_query_set(tasks):
+    return [task for task in tasks]
 
 
 @login_required(login_url="login/")
@@ -47,7 +71,7 @@ def get_tasks_from_list(task_list):
 
 
 @login_required(login_url="login/")
-def task_add(request, task_list_id):
+def task_add(request, task_list_id, task_status):
     task_list_id = int(task_list_id)
     task_list_name = UserTaskList.objects.filter(owner_id=request.user.id, id=task_list_id).first()
     if request.method == 'POST':
@@ -59,20 +83,43 @@ def task_add(request, task_list_id):
                                  due_date=form.cleaned_data['due_date'],
                                  to_do=True, user_task_list=user_task_list)
             user_task.save()
-            return redirect('/task-list')
+            if task_status != 'lists':
+                return redirect('/' + task_status)
+            else:
+                return redirect('/task-list/' + str(task_list_id))
 
     return render(request, 'tasks/task-add.html', {'form': UserTaskForm(), 'task_list_name': task_list_name})
 
 
 @login_required(login_url="login/")
-def task_del(request, task_list_name, task_id):
-    user_task = get_object_or_404(UserTask, id=task_id)
+def task_edit(request, user_task_list_id, user_task_id, task_status):
+    task_list = get_object_or_404(UserTaskList, id=user_task_list_id)
+    task = get_object_or_404(UserTask, id=user_task_id, user_task_list=task_list)
+    if request.method == 'POST':
+        form = UserTaskForm(request.POST, instance=task)
+        if form.is_valid():
+            form.save()
+            if task_status != 'lists':
+                return redirect('/' + task_status)
+            else:
+                return redirect('/task-list/' + str(task.user_task_list.id))
+    else:
+        form = UserTaskForm(instance=task)
 
-    if user_task.user_task_list.name != task_list_name:
-        return redirect('/task-list')
+    return render(request, 'tasks/task-edit.html', {'form': form, 'task': task, 'user_task_list_name': task_list.name})
 
-    user_task.delete()
-    return redirect('/task-list')
+
+@login_required(login_url="login/")
+def task_del(request, user_task_list_id, user_task_id, task_status):
+    task_list = get_object_or_404(UserTaskList, id=user_task_list_id)
+    task = get_object_or_404(UserTask, id=user_task_id, user_task_list=task_list)
+    notification = get_object_or_404(Notification, task=task)
+    notification.delete()
+    task.delete()
+    if task_status != 'lists':
+        return redirect('/' + task_status)
+    else:
+        return redirect('/task-list/' + str(task.user_task_list.id))
 
 
 @login_required(login_url="login/")
@@ -95,7 +142,17 @@ def tasks_in_progress(request):
     user = request.user
     user_task_lists = get_all_user_task_lists(user)
     return render(request, 'tasks/tasks-in-progress.html',
-                  {'user_tasks': get_user_task_attributes_sort(user, user_task_lists, {'in_progress': True}, 'due_date')})
+                  {'user_tasks': get_user_task_attributes_sort(user, user_task_lists, {'in_progress': True},
+                                                               'due_date')})
+
+
+@login_required(login_url="login/")
+def tasks_completed(request):
+    user = request.user
+    user_task_lists = get_all_user_task_lists(user)
+    return render(request, 'tasks/tasks-completed.html',
+                  {'user_tasks': get_user_task_attributes_sort(user, user_task_lists, {'completed': True},
+                                                               'completed_at')})
 
 
 def get_user_task_attributes_sort(user, task_lists, attributes, sort_option):
@@ -112,20 +169,12 @@ def get_all_user_tasks_attributes(user, task_lists, attributes):
     return tasks
 
 
-def sort_and_update_tasks(tasks, attribute):
-    sorted_tasks = sorted(tasks, key=lambda x: (getattr(x, attribute) is None, getattr(x, attribute)))
+def sort_and_update_tasks(tasks, attribute, rev=False):
+    sorted_tasks = sorted(tasks, key=lambda x: (getattr(x, attribute) is None, getattr(x, attribute)), reverse=rev)
     for task in sorted_tasks:
         if getattr(task, attribute) is None:
             setattr(task, attribute, '')
     return sorted_tasks
-
-
-@login_required(login_url="login/")
-def tasks_completed(request):
-    user = request.user
-    user_task_lists = get_all_user_task_lists(user)
-    return render(request, 'tasks/tasks-completed.html',
-                  {'user_tasks': get_user_task_attributes_sort(user, user_task_lists, {'completed': True}, 'completed_at')})
 
 
 def daily_view(request):
@@ -138,3 +187,11 @@ def weekly_view(request):
 
 def monthly_view(request):
     return render(request, 'tasks/monthly-view.html')
+
+
+def notification_view(request, notification_id):
+    notification = Notification.objects.get(id=notification_id, seen=False)
+    notification.seen = True
+    notification.save()
+    return render(request, 'tasks/notification.html', {'notification': notification})
+

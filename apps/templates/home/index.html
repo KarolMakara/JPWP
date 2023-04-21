@@ -9,7 +9,6 @@
 
 {% block content %}
 
-  
     <div class="row">
       <div class="col-md-4">
         <a href="/tasks-to-do">
@@ -23,7 +22,7 @@
             </div>
             <div class="card-footer">
               <div class="stats">
-                <i class="material-icons">access_time</i> <p style="color:red">TUTAJ BEDZIE SKRYP KTORY POZYSKUJE CZAS EDYCJI TASKA</p>
+                <i class="material-icons">access_time</i> <p>Last modified: {{ last_modified_to_do|timesince }} ago</p>
               </div>
             </div>
           </div>
@@ -41,7 +40,7 @@
             </div>
             <div class="card-footer">
               <div class="stats">
-                <i class="material-icons">access_time</i> <p style="color:red">TUTAJ BEDZIE SKRYP KTORY POZYSKUJE CZAS EDYCJI TASKA</p>
+                <i class="material-icons">access_time</i> <p>Last modified: {{ last_modified_in_progress|timesince }} ago</p>
               </div>
             </div>
           </div>
@@ -60,7 +59,7 @@
             </div>
             <div class="card-footer">
               <div class="stats">
-                <i class="material-icons">access_time</i> <p style="color:red">TUTAJ BEDZIE SKRYP KTORY POZYSKUJE CZAS EDYCJI TASKA</p>
+                <i class="material-icons">access_time</i> <p>Last modified: {{ last_modified_completed|timesince }} ago</p>
               </div>
             </div>
           </div>
@@ -118,6 +117,8 @@
       md.initDashboardPageCharts();
 
     });
+
+
 
   </script>
 
