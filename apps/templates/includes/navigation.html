@@ -18,17 +18,18 @@
               <li class="nav-item dropdown">
                 <a class="nav-link" href="http://example.com" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                   <i class="material-icons">notifications</i>
-                  <span class="notification">{{ notifications.count }}</span>
+                  <span id="notifications_count" class="notification"></span>
                   <p class="d-lg-none d-md-block">
                     Some Actions
                   </p>
                 </a>
-                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
-                  {% for notification in notifications %}
+                <div id="notifications" class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
+                  <!-- {% for notification in notifications %}
                     {% if not notification.seen %}
                       <a class="dropdown-item" href="{% url 'notification_view' notification.id %}">{{ notification.message }}</a>
                     {% endif %}
-                  {% endfor %}
+                  {% endfor %} -->
+                
               </div>
               
               </li>

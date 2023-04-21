@@ -20,4 +20,5 @@ urlpatterns = [
     path('weekly-view', views.weekly_view, name='weekly_view'),
     path('monthly-view', views.monthly_view, name='monthly_view'),
     path('notifications/send/<int:notification_id>/', views.notification_view, name='notification_view'),
+    path('notifications-data', views.get_notifications_data, name='notifications_data')
 ]

@@ -2,6 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.template.loader import render_to_string
+from django.views.decorators.csrf import csrf_exempt
 
 from apps.tasks.forms import UserTaskForm
 from apps.tasks.models import UserTaskList, UserTask, GroupTaskList, GroupTask, Task, Notification
@@ -195,3 +196,17 @@ def notification_view(request, notification_id):
     notification.save()
     return render(request, 'tasks/notification.html', {'notification': notification})
 
+
+@csrf_exempt
+@login_required
+def get_notifications_data(request):
+    notifications = Notification.objects.filter(user=request.user, seen=False).values('message', 'id')
+    notifications = list(notifications)
+    notifications[0]['count'] = len(notifications)
+    # print(notifications)
+    # ser = models.ForeignKey(MyUser, on_delete=models.CASCADE)
+    # task = models.OneToOneField(UserTask, on_delete=models.CASCADE, null=True)
+    # message = models.TextField()
+    # created_at = models.DateTimeField(auto_now_add=True)
+    # seen = models.BooleanField(default=False)
+    return JsonResponse({'notifications': notifications})
