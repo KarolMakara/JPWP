@@ -65,6 +65,3 @@ Uzupełnij funkcję set_task_as_completed w admin.py, tak aby po wejściu w mode
 
 #### Screen z rozwiązaniem należy umieścić na upelu. </br> </br>
 
-
-
-
