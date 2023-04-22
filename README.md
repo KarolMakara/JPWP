@@ -1,7 +1,7 @@
 # Wstęp
 W celu wykonania poniższych zadań należy pobrać projekt z tej
 <a href="">strony</a> i otworzyć go (najlepiej) w pycharmie.
-Wszystkie deklaracje klas/fukncji zostały juz napisane w powyższym projekcie. Należy tylko uzupełnić pustą klasę/funkcję. Po uruchomieniu i wejściu na <a href="127.0.0.1:8000">localhost</a> należy zarejestrować konto swoim imieniem, nazwiskiem oraz e-mailem studenckim, aby na screenie z wykonania zadania potwierdzić swoją tożsamość.
+Wszystkie deklaracje klas/fukncji zostały juz napisane w powyższym projekcie. Należy tylko uzupełnić pustą klasę/funkcję. Po uruchomieniu i wejściu na <a href="127.0.0.1:8000">localhost</a> należy zarejestrować konto swoim imieniem, nazwiskiem w polu username oraz e-mailem studenckim (python manage.py createsuperuser), aby na screenie z wykonania zadania potwierdzić swoją tożsamość.
 
 Przydatne komendy:
 ```shell
@@ -9,6 +9,7 @@ python manage.py makemigrations
 python manage.py migrate
 python manage.py runserver
 python manage.py shell
+python manage.py createsuperuser
 ```
 
 # Zadanie 1
