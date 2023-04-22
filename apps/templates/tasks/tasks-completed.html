@@ -38,24 +38,14 @@
                   </tr>
                 {% for task in user_tasks %}
                             <tr>
-                            <td class="col-md-1" style="width: 20px">
-                                <div class="form-check">
-                                <label class="form-check-label">
-                                    <input class="form-check-input" type="checkbox" value="">
-                                    <span class="form-check-sign">
-                                    <span class="check"></span>
-                                    </span>
-                                </label>
-                                </div>
-                            </td>
-                            <td class="col-md-8">{{ task.name }}</td>
+                            <td class="col-md-8"><a href="{% url 'task_show' user_task_list_id=current_task_list_id user_task_id=task_id task_status='tasks-to-do' %}" style="color: green">{{ task.name }}</a></td>
                             <td class="col-md-2">{{ task.due_date|date:"M d, Y"}}</td>
                             <td class="td-actions justify-content-end col-md-4 pull-right">
                                 <button type="button" rel="tooltip" title="Edit Task" class="btn btn-success btn-link btn-sm">
                                     <i class="material-icons">edit</i>
                                 </button>
                                 
-                                <button type="button" rel="tooltip" title="Remove" class="btn btn-danger btn-link btn-sm">
+                                <button type="button" rel="tooltip" title="Remove" class="btn btn-danger btn-link btn-sm remove">
                                     <i class="material-icons">close</i>
                                 </button>
                             </td>
@@ -78,5 +68,9 @@
 <!-- Specific Page JS goes HERE  -->
 {% block javascripts %}
 
-
+<script>
+  $(document).on('click', '.remove', function(){
+      return confirm('Are you sure you want to update this?');
+  })
+</script>
 {% endblock javascripts %}

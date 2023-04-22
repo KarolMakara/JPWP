@@ -1,0 +1,74 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Task Add {% endblock %} 
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header card-header-primary d-flex justify-content-center">
+          <h4 class="card-title">
+            {{ task.name }}
+          </h4>
+        </div>
+        <div class="card-body">
+                
+            {% csrf_token %} 
+            <div class="row">
+                <div class="col-md-12">
+                    Description:
+                    </br>
+                    {{ task.description }}
+                </div>
+             </div>
+
+            </br>
+            </br>
+  
+            <div class="row">
+                <div class="col-md-12">
+                    Deadline:
+                    </br>
+                    {{ task.due_date|date:'Y-m-d H:i' }}
+                </div>
+            </div>    
+
+            </br>
+            </br>
+
+            <div class="row">
+            <div class="col-md-12">
+                List:
+                </br>
+                {{ user_task_list_name }}
+            </div>
+            </div>
+                
+
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+<script>
+  // get the form elements
+var datepicker = document.getElementById('datepicker');
+var hours = document.getElementById('hours');
+var minutes = document.getElementById('minutes');
+
+// set the default date and time
+var defaultDate = new Date();
+datepicker.value = defaultDate.toLocaleDateString();
+hours.value = defaultDate.getHours().toString().padStart(2, '0');
+minutes.value = defaultDate.getMinutes().toString().padStart(2, '0');
+
+</script>
+{% endblock javascripts %}

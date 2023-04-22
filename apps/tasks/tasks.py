@@ -11,11 +11,20 @@ from apps.tasks.models import UserTask, Notification, MyUser
 def send_upcoming_task_notifications():
     due_date_threshold = timezone.now() + timedelta(days=1)
     tasks_due_soon = UserTask.objects.filter(due_date__lte=due_date_threshold)
+    tasks_missed_deadline = UserTask.objects.filter(due_date__lt=timezone.now())
+
     for task in tasks_due_soon:
-        notification_message = f"Task '{task.name}' is due soon!"
-        existing_notification = Notification.objects.filter(task=task, seen=False).first()
-        if not existing_notification:
-            Notification.objects.create(message=notification_message, user=task.user_task_list.owner, task=task)
+
+        if tasks_missed_deadline.filter(id=task.id).exists():
+            notification_message = f"Missed deadline for '{task.name}'!"
+        else:
+            notification_message = f"Task '{task.name}' is due soon!"
+
+        existing_notification, _ = Notification.objects.update_or_create(
+            task=task,
+            defaults={'message': notification_message, 'user': task.user_task_list.owner}
+        )
+
 
 # @shared_task
 # def send_notification(notification_id):

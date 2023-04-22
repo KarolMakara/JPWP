@@ -112,11 +112,16 @@ def task_edit(request, user_task_list_id, user_task_id, task_status):
 
 @login_required(login_url="login/")
 def task_del(request, user_task_list_id, user_task_id, task_status):
-    task_list = get_object_or_404(UserTaskList, id=user_task_list_id)
-    task = get_object_or_404(UserTask, id=user_task_id, user_task_list=task_list)
-    notification = get_object_or_404(Notification, task=task)
-    notification.delete()
-    task.delete()
+    task_list = UserTaskList.objects.filter(id=user_task_list_id).first()
+    task = UserTask.objects.filter(id=user_task_id, user_task_list=task_list).first()
+
+    if task and task_list:
+        task.delete()
+
+    notification = Notification.objects.filter(task=task).first()
+    if notification:
+        notification.delete()
+
     if task_status != 'lists':
         return redirect('/' + task_status)
     else:
@@ -190,11 +195,15 @@ def monthly_view(request):
     return render(request, 'tasks/monthly-view.html')
 
 
-def notification_view(request, notification_id):
+def notification_mark_as_seen(request, notification_id):
     notification = Notification.objects.get(id=notification_id, seen=False)
     notification.seen = True
     notification.save()
-    return render(request, 'tasks/notification.html', {'notification': notification})
+
+    task = notification.task
+    task_list = task.user_task_list
+
+    return render(request, 'tasks/task-show.html', {'notification': notification, 'task': task, 'user_task_list_name': task_list.name, 'message': 'TEST'})
 
 
 @csrf_exempt
@@ -202,7 +211,9 @@ def notification_view(request, notification_id):
 def get_notifications_data(request):
     notifications = Notification.objects.filter(user=request.user, seen=False).values('message', 'id')
     notifications = list(notifications)
-    notifications[0]['count'] = len(notifications)
+    notification_length = len(notifications)
+    if notification_length > 0:
+        notifications[0]['count'] = notification_length
     # print(notifications)
     # ser = models.ForeignKey(MyUser, on_delete=models.CASCADE)
     # task = models.OneToOneField(UserTask, on_delete=models.CASCADE, null=True)
@@ -210,3 +221,13 @@ def get_notifications_data(request):
     # created_at = models.DateTimeField(auto_now_add=True)
     # seen = models.BooleanField(default=False)
     return JsonResponse({'notifications': notifications})
+
+
+'task-list/<int:user_task_list_id>/show/<int:user_task_id>/<str:task_status>'
+
+
+def task_show(request, user_task_list_id, user_task_id, task_status):
+    task_list = UserTaskList.objects.get(id=user_task_list_id)
+    task = UserTask.objects.get(id=user_task_id, user_task_list=task_list)
+
+    return render(request, 'tasks/task-show.html', {'task': task, 'user_task_list_name': task_list.name})

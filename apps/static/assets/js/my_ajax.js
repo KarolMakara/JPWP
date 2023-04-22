@@ -5,7 +5,7 @@ $(document).ready(function() {
 
   });
 
-  setInterval(updateTable, 1000);
+  setInterval(updateTable, 10000);
 
 function updateTable() {
         $.ajax({
@@ -29,7 +29,7 @@ function updateTable() {
               // Append the updated rows to the table
               notifications.forEach(function(notification) {
                   $('#notifications').append(`
-                   <a class="dropdown-item" href="/notifications/send/${notification.id}/">${notification.message}</a>
+                   <a class="dropdown-item" href="/notifications/mark-as-seen/${notification.id}/">${notification.message}</a>
                   `);
               });
             },
@@ -38,3 +38,4 @@ function updateTable() {
             }
         });
     }
+
