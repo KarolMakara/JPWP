@@ -55,7 +55,7 @@ Kolejnym zadaniem będzie dodanie nowej listy zawierającej kilka zadań. Teraz 
 ##### Część 2:
 
 Dodaj przykładowe zadania z deadlinem wczorajszym i jutrzejszym. </br> </br>
-Modyfikując task_list.html na stronie należy wyświetlić:
+Modyfikując task_list.html i funkcję renderującą na stronie należy wyświetlić:
 - na czerwono, zadania które nie zostały zrealizowane (wczorajsze)
 - na żółto, zadania których termin się zbliża (dzień przed terminem)
 - na biało, pozostałe
