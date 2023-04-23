@@ -29,8 +29,6 @@
               <table class="table">
               <tbody>
                 <tr>
-                  <td class="col-md-1" style="width: 20px">
-                  </td>
                   <td class="col-md-8"><h4>Task name</h4></td>
                   <td class="col-md-2"><h4>Deadline</h4></td>
                   <td class="td-actions justify-content-end col-md-4 pull-right">
@@ -41,20 +39,31 @@
                               
                     {% with current_task_list_id=task.user_task_list.id task_id=task.id %}
                       {% if task.is_past_due %}
-                        <td class="col-md-8"><a href="{% url 'task_show' user_task_list_id=current_task_list_id user_task_id=task_id task_status='tasks-to-do' %}" style="color: red">{{ task.name }}</a></td>
+                        <td class="col-md-8"><a href="{% url 'task_show' user_task_list_id=current_task_list_id user_task_id=task_id %}" style="color: red">{{ task.name }}</a></td>
                         <td class="overdue col-md-2" style="color: red">{{ task.due_date|date:"H:i M d, Y"}}</td>
                       {% elif task.upcoming %}
-                        <td class="col-md-8"><a href="{% url 'task_show' user_task_list_id=current_task_list_id user_task_id=task_id task_status='tasks-to-do' %}" style="color: orange">{{ task.name }}</a></td>
+                        <td class="col-md-8"><a href="{% url 'task_show' user_task_list_id=current_task_list_id user_task_id=task_id %}" style="color: orange">{{ task.name }}</a></td>
                         <td class="overdue col-md-2" style="color: orange">{{ task.due_date|date:"H:i M d, Y"}}</td>
                       {% else %}
-                        <td class="col-md-8"><a href="{% url 'task_show' user_task_list_id=current_task_list_id user_task_id=task_id task_status='tasks-to-do' %}" style="color: black">{{ task.name }}</a></td>
+                        <td class="col-md-8"><a href="{% url 'task_show' user_task_list_id=current_task_list_id user_task_id=task_id %}" style="color: black">{{ task.name }}</a></td>
                         <td class="col-md-2">{{ task.due_date|date:"H:i M d, Y"}}</td>
                       {% endif %}
-                        <td class="td-actions justify-content-end col-md-4 pull-right">
-                      
+
+                      <td class="">
+                        <form action="{% url 'end_task' user_task_list_id=current_task_list_id user_task_id=task_id %}" method="POST">
+                          {% csrf_token %}
+                          <button type="submit" name="start-task" rel="tooltip" title="move to tasks in progress" class="btn btn-warning btn-link btn-sm move">
+                            Done
+                          </button>
+                        </form> 
+                      </td>
+
+                      <td class="">
+
+                        <div class="td-actions justify-content-end col-md-4 pull-right">
                           <form action="{% url 'task_edit' user_task_list_id=current_task_list_id user_task_id=task_id task_status='tasks-to-do' %}" method="GET">
                             {% csrf_token %}
-                            <button type="submit" name="task-del" rel="tooltip" title="Edit Task" class="btn btn-danger btn-link btn-sm">
+                            <button type="submit" name="task-del" rel="tooltip" title="Edit Task" class="btn btn-warning btn-link btn-sm">
                               <i class="material-icons">edit</i>
                             </button>
                           </form> 
@@ -67,8 +76,10 @@
                               <i class="material-icons">close</i>
                             </button>
                           </form>
+                        </div>
+                      </td>
                     {% endwith %}
-                    </td>
+                    
                     </tr>
                         
                 {% endfor %} 
@@ -88,6 +99,9 @@
 <!-- Specific Page JS goes HERE  -->
 {% block javascripts %}
 <script>
+  $(document).on('click', '.move', function(){
+    return confirm('Are you sure you want move this?');
+  })
   $(document).on('click', '.remove', function(){
       return confirm('Are you sure you want to update this?');
   })

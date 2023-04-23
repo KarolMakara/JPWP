@@ -1,4 +1,6 @@
-pkill redis-server; konsole --hold -e "redis-server" &
-konsole --hold -e "celery -A JPWP worker --loglevel=info" &
-konsole --hold -e "celery -A JPWP beat -l INFO" &
-konsole --hold -e "python3 manage.py runserver"
+#!/bin/bash
+
+konsole --noclose -e "redis-server" &
+konsole --noclose -e "celery -A JPWP worker --loglevel=info" &
+konsole --noclose -e "celery -A JPWP beat -l INFO" &
+konsole --noclose -e "python3 manage.py runserver" &

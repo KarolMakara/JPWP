@@ -2,11 +2,12 @@
 """
 Copyright (c) 2019 - present AppSeed.us
 """
-
+from django.contrib.auth.decorators import login_required
 # Create your views here.
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login
-from .forms import LoginForm, SignUpForm
+from .forms import LoginForm, SignUpForm, UserSettingsForm
+from ..accounts.models import MyUser
 
 
 def login_view(request):
@@ -55,3 +56,18 @@ def register_user(request):
         form = SignUpForm()
 
     return render(request, "accounts/register.html", {"form": form, "msg": msg, "success": success})
+
+
+@login_required(login_url="login/")
+def edit_profile_settings(request):
+    user = get_object_or_404(MyUser, id=request.user.id)
+
+    if request.method == 'POST':
+        form = UserSettingsForm(request.POST, instance=user)
+        if form.is_valid():
+            form.save()
+            return redirect('/')
+    else:
+        form = UserSettingsForm(instance=user)
+
+    return render(request, 'home/page-user.html', {'form': UserSettingsForm(), 'user': request.user})
