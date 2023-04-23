@@ -13,7 +13,7 @@ urlpatterns = [
     path('task-list-add', views.task_list_add, name='task_list_add'),
     path('task-list/<int:user_task_list_id>/edit/<int:user_task_id>/<str:task_status>', views.task_edit, name='task_edit'),
     path('task-list/<int:user_task_list_id>/delete/<int:user_task_id>/<str:task_status>', views.task_del, name='task_delete'),
-    path('task-list/<int:user_task_list_id>/show/<int:user_task_id>/<str:task_status>', views.task_show, name='task_show'),
+    path('task-list/<int:user_task_list_id>/show/<int:user_task_id>', views.task_show, name='task_show'),
     path('tasks-to-do', views.tasks_to_do, name='tasks_to_do'),
     path('tasks-in-progress', views.tasks_in_progress, name='tasks_in_progress'),
     path('tasks-completed', views.tasks_completed, name='tasks_completed'),
@@ -21,5 +21,8 @@ urlpatterns = [
     path('weekly-view', views.weekly_view, name='weekly_view'),
     path('monthly-view', views.monthly_view, name='monthly_view'),
     path('notifications/mark-as-seen/<int:notification_id>/', views.notification_mark_as_seen, name='notification_mark_as_seen'),
-    path('notifications-data', views.get_notifications_data, name='notifications_data')
+    path('notifications-data', views.get_notifications_data, name='notifications_data'),
+    path('groups', views.default_group_view, name='groups'),
+    path('groups/<int:group_id>/<int:group_list_id>', views.handle_fill_group_task_list, name='groups'),
+
 ]

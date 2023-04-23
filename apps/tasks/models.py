@@ -59,19 +59,8 @@ class UserTask(Task):
         return self.name
 
 
-class Notification(models.Model):
-    user = models.ForeignKey(MyUser, on_delete=models.CASCADE)
-    task = models.OneToOneField(UserTask, on_delete=models.CASCADE, null=True)
-    message = models.TextField()
-    created_at = models.DateTimeField(auto_now_add=True)
-    seen = models.BooleanField(default=False)
-
-    def __str__(self):
-        return self.message
-
-
 class GroupTaskList(TaskList):
-    for_group = models.OneToOneField(MyGroup, on_delete=models.CASCADE)
+    for_group = models.ForeignKey(MyGroup, on_delete=models.CASCADE)
 
 
 class GroupTask(Task):
@@ -81,35 +70,14 @@ class GroupTask(Task):
         return self.name
 
 
+class Notification(models.Model):
+    user = models.ForeignKey(MyUser, on_delete=models.CASCADE, related_name="user_notifications")
+    user_task = models.OneToOneField(UserTask, on_delete=models.CASCADE, null=True, blank=True)
+    group_task = models.OneToOneField(GroupTask, on_delete=models.CASCADE, null=True, blank=True)
+    message = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    seen = models.BooleanField(default=False)
 
-# class Group(models.Model):
-#     name = models.CharField(max_length=50)
-#     users = models.ManyToManyField(
-#         settings.AUTH_USER_MODEL,
-#         related_name='groups_joined',
-#         related_query_name='group_joined',
-#         blank=True,
-#         through='GroupMembership'
-#     )
-#
-#     def __str__(self):
-#         return self.name
-#
-#
-# class GroupMembership(models.Model):
-#     user = models.ForeignKey(
-#         settings.AUTH_USER_MODEL,
-#         on_delete=models.CASCADE
-#     )
-#     group = models.ForeignKey(
-#         Group,
-#         on_delete=models.CASCADE
-#     )
-#
-#
-# class GroupTask(models.Model):
-#     task = models.ForeignKey(Task, on_delete=models.CASCADE)
-#     group = models.ForeignKey(Group, on_delete=models.CASCADE)
-#
-#     def __str__(self):
-#         return self.task.name + ' for ' + self.group.name
+    def __str__(self):
+        return self.message
+
