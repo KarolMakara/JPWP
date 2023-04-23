@@ -1,63 +1,45 @@
-from datetime import datetime, timedelta
 from celery import shared_task
-from django.http.response import HttpResponse
-from django.template.loader import render_to_string
-from django.utils import timezone
-
-from apps.accounts.models import MyGroup
 from apps.tasks.models import *
 
 
 @shared_task()
 def send_upcoming_task_notifications():
-    due_date_threshold = timezone.now() + timedelta(days=1)
-    user_tasks_due_soon = UserTask.objects.filter(due_date__lte=due_date_threshold)
-    user_tasks_missed_deadline = UserTask.objects.filter(due_date__lt=timezone.now())
+    for user in MyUser.objects.all():
+        due_date_threshold = timezone.now() + timedelta(days=int(user.notification_before))
+        user_tasks_due_soon = UserTask.objects.filter(due_date__lte=due_date_threshold)
+        user_tasks_missed_deadline = UserTask.objects.filter(due_date__lt=timezone.now())
 
-    group_tasks_due_soon = GroupTask.objects.filter(due_date__lte=due_date_threshold)
-    group_tasks_missed_deadline = GroupTask.objects.filter(due_date__lt=timezone.now())
+        for task in user_tasks_due_soon:
 
-    for task in user_tasks_due_soon:
-
-        if user_tasks_missed_deadline.filter(id=task.id).exists():
-            notification_message = f"USER: Missed deadline for '{task.name}'!"
-        else:
-            notification_message = f"USER: Task '{task.name}' is due soon!"
-
-        existing_notification, _ = Notification.objects.update_or_create(
-            user_task=task,
-            defaults={'message': notification_message, 'user': task.user_task_list.owner}
-        )
-
-    group_task_lists = []
-    for task in list(group_tasks_due_soon) + list(group_tasks_missed_deadline):
-        group_task_lists.append(GroupTaskList.objects.filter(id=task.group_task_list.id).first())
-
-    groups = []
-    for task_list in group_task_lists:
-        groups.append(MyGroup.objects.filter(id=task_list.for_group.id).first())
-
-    users = []
-    for group in groups:
-        user_ids = group.members.all().values_list('id', flat=True)
-        group_users = MyUser.objects.filter(id__in=user_ids)
-        users.extend(group_users)
-
-    users = list(set(users))
-
-    for task in group_tasks_due_soon:
-
-        for user in users:
-            if group_tasks_missed_deadline.filter(id=task.id).exists():
-                notification_message = f"GROUP: Missed deadline for '{task.name}'!"
+            if user_tasks_missed_deadline.filter(id=task.id).exists():
+                notification_message = f"USER: Missed deadline for '{task.name}'!"
             else:
-                notification_message = f"GROUP: Task '{task.name}' is due soon!"
+                notification_message = f"USER: Task '{task.name}' is due soon!"
 
             existing_notification, _ = Notification.objects.update_or_create(
-                group_task=task,
-                defaults={'message': notification_message, 'user': user}
+                user_task=task,
+                defaults={'message': notification_message, 'user': task.user_task_list.owner}
             )
 
+    groups = MyGroup.objects.all()
+    for group in groups:
+        due_date_threshold = timezone.now() + timedelta(days=int(group.notification_before))
+        members = group.members.all()
+        for g in GroupTaskList.objects.filter(for_group=group):
+            due_date_tasks = GroupTask.objects.filter(group_task_list=g, due_date__lte=due_date_threshold)
+
+            missed_tasks = GroupTask.objects.filter(group_task_list=g, due_date__lt=timezone.now())
+            for task in due_date_tasks:
+                for member in members:
+                    if missed_tasks.filter(id=task.id).exists():
+                        notification_message = f"GROUP: Missed deadline for '{task.name}'!"
+                    else:
+                        notification_message = f"GROUP: Task '{task.name}' is due soon!"
+                    existing_notification, _ = Notification.objects.update_or_create(
+                        group_task=task,
+                        user=member,
+                        defaults={'message': notification_message, 'user': member}
+                    )
 
 # @shared_task
 # def send_notification(notification_id):

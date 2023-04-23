@@ -24,5 +24,7 @@ urlpatterns = [
     path('notifications-data', views.get_notifications_data, name='notifications_data'),
     path('groups', views.default_group_view, name='groups'),
     path('groups/<int:group_id>/<int:group_list_id>', views.handle_fill_group_task_list, name='groups'),
-
+    path('start-task/<int:user_task_list_id>/<int:user_task_id>', views.start_task, name='start_task'),
+    path('end-task/<int:user_task_list_id>/<int:user_task_id>', views.end_task, name='end_task'),
+    path('test', views.test, name='test')
 ]

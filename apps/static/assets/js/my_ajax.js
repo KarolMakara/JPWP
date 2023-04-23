@@ -5,7 +5,7 @@ $(document).ready(function() {
 
   });
 
-  setInterval(updateTable, 10000);
+  setInterval(updateTable, 60000);
 
 function updateTable() {
         $.ajax({

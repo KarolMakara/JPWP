@@ -48,6 +48,16 @@
                         <td class="col-md-8"><a href="{% url 'task_show' user_task_list_id=current_task_list_id user_task_id=task_id %}" style="color: black">{{ task.name }}</a></td>
                         <td class="col-md-2">{{ task.due_date|date:"H:i M d, Y"}}</td>
                       {% endif %}
+
+                      <td class="">
+                        <form action="{% url 'end_task' user_task_list_id=current_task_list_id user_task_id=task_id %}" method="POST">
+                          {% csrf_token %}
+                          <button type="submit" name="start-task" rel="tooltip" title="move to tasks in progress" class="btn btn-warning btn-link btn-sm move">
+                            Done
+                          </button>
+                        </form> 
+                      </td>
+
                       <td class="">
 
                         <div class="td-actions justify-content-end col-md-4 pull-right">
@@ -89,6 +99,9 @@
 <!-- Specific Page JS goes HERE  -->
 {% block javascripts %}
 <script>
+  $(document).on('click', '.move', function(){
+    return confirm('Are you sure you want move this?');
+  })
   $(document).on('click', '.remove', function(){
       return confirm('Are you sure you want to update this?');
   })

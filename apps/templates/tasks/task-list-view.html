@@ -163,7 +163,13 @@
 {% block javascripts %}
 <script>
   $(document).on('click', '.remove', function(){
-  return confirm('Are you sure you want to remove this?');
+    return confirm('Are you sure you want to remove this?');
   })
+
+  document.getElementById("nav-profile").classList.add("active");
+
   </script>
+
+
+
 {% endblock javascripts %}

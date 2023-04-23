@@ -164,39 +164,62 @@ def task_list_add(request):
 def tasks_to_do(request):
     user = request.user
     user_task_lists = get_all_user_task_lists(user)
+    group_task_lists = get_all_group_task_lists(user)
     return render(request, 'tasks/tasks-to-do.html',
-                  {'user_tasks': get_user_task_attributes_sort(user, user_task_lists, {'to_do': True}, 'due_date')})
+                  {'user_tasks': get_task_attributes_sort(user, user_task_lists, group_task_lists,
+                                                          {'to_do': True},
+                                                          'due_date')})
 
 
 @login_required(login_url="login/")
 def tasks_in_progress(request):
     user = request.user
     user_task_lists = get_all_user_task_lists(user)
+    group_task_lists = get_all_group_task_lists(user)
     return render(request, 'tasks/tasks-in-progress.html',
-                  {'user_tasks': get_user_task_attributes_sort(user, user_task_lists, {'in_progress': True},
-                                                               'due_date')})
+                  {'user_tasks': get_task_attributes_sort(user, user_task_lists, group_task_lists,
+                                                          {'in_progress': True},
+                                                          'due_date')})
 
 
 @login_required(login_url="login/")
 def tasks_completed(request):
     user = request.user
     user_task_lists = get_all_user_task_lists(user)
+    group_task_lists = get_all_group_task_lists(user)
     return render(request, 'tasks/tasks-completed.html',
-                  {'user_tasks': get_user_task_attributes_sort(user, user_task_lists, {'completed': True},
-                                                               'completed_at')})
+                  {'user_tasks': get_task_attributes_sort(user, user_task_lists, group_task_lists, {'completed': True},
+                                                          'completed_at')})
 
 
-def get_user_task_attributes_sort(user, task_lists, attributes, sort_option):
-    tasks = get_all_user_tasks_attributes(user, task_lists, attributes=attributes)
+def get_all_group_task_lists(user):
+    groups = MyGroup.objects.filter(members=user)
+    group_task_lists = []
+    for group in groups:
+        group_task_lists.append(GroupTaskList.objects.filter(for_group=group))
+
+    group_task_lists = [gtl for qs in group_task_lists for gtl in qs]
+
+    return group_task_lists
+
+
+def get_task_attributes_sort(user, user_task_lists, group_task_lists, attributes, sort_option):
+    tasks = get_all_tasks_attributes(user, user_task_lists, group_task_lists, attributes=attributes)
     return sort_and_update_tasks(tasks, sort_option)
 
 
-def get_all_user_tasks_attributes(user, task_lists, attributes):
+def get_all_tasks_attributes(user, user_task_lists, group_task_lists, attributes):
     tasks = []
-    for task_list in task_lists:
+    for task_list in user_task_lists:
         user_task_list = UserTask.objects.filter(user_task_list=task_list, **attributes)
         for user_task in user_task_list:
             tasks.append(user_task)
+
+    for task_list in group_task_lists:
+        group_task_list = GroupTask.objects.filter(group_task_list=task_list, **attributes)
+        for user_task in group_task_list:
+            tasks.append(user_task)
+
     return tasks
 
 
@@ -295,6 +318,7 @@ def handle_fill_group_task_list(request, group_id, group_list_id):
                                                  'current_list': current_list,
                                                  'user': user})
 
+
 @login_required(login_url="login/")
 def daily_view(request):
     user = request.user
@@ -320,11 +344,16 @@ def daily_view(request):
             elif task.due_date.date() == current_date:
                 tasks_due.append(task)
     tasks_due.sort(key=lambda x: x.due_date)
+    if user_task_lists is not None:
+        current = user_task_lists[0].id
+    else:
+        current = None
     return render(request, 'tasks/daily-view.html',
                   {'user_task_lists': user_task_lists,
                    'user_tasks': tasks_due + tasks_no_due,
-                   'current_task_list_id': user_task_lists[0].id,
+                   'current_task_list_id': current,
                    'current_date': current_date})
+
 
 @login_required(login_url="login/")
 def weekly_view(request):
@@ -355,14 +384,21 @@ def weekly_view(request):
                 tasks_current_week.append(task)
     tasks_current_week.sort(key=lambda x: x.due_date)
     tasks_past_week.sort(key=lambda x: x.due_date)
+
+    if user_task_lists is not None:
+        current = user_task_lists[0].id
+    else:
+        current = None
+
     return render(request, 'tasks/weekly-view.html',
                   {'user_task_lists': user_task_lists,
                    'user_tasks_current_week': tasks_current_week,
                    'user_tasks_past_week': tasks_past_week,
                    'user_tasks': tasks_no_due,
-                   'current_task_list_id': user_task_lists[0].id,
+                   'current_task_list_id': current,
                    'current_week_start': current_week_start,
                    'current_week_end': current_week_end})
+
 
 @login_required(login_url="login/")
 def monthly_view(request):
@@ -396,14 +432,70 @@ def monthly_view(request):
                 tasks_past_month.append(task)
     tasks_current_month.sort(key=lambda x: x.due_date)
     tasks_past_month.sort(key=lambda x: x.due_date)
+
+    if user_task_lists is not None:
+        current = user_task_lists[0].id
+    else:
+        current = None
+
     return render(request, 'tasks/monthly-view.html',
                   {'user_task_lists': user_task_lists,
                    'user_tasks_month': tasks_current_month,
                    'user_tasks_past': tasks_past_month,
                    'user_tasks': tasks_no_due,
-                   'current_task_list_id': user_task_lists[0].id,
+                   'current_task_list_id': current,
                    'current_month_start': current_month_start})
 
 
+def start_task(request, user_task_list_id, user_task_id):
+    task_list = UserTaskList.objects.get(id=user_task_list_id)
+    task = UserTask.objects.get(id=user_task_id, user_task_list=task_list)
+    task.set_in_progress()
+    task.save()
+
+    return redirect('/tasks-to-do')
 
 
+def test(request):
+    pass
+
+
+#     # due_date_threshold = timezone.now() + timedelta(days=1)
+#     # group_tasks_due_soon = GroupTask.objects.filter(due_date__lte=due_date_threshold)
+#     # group_tasks_missed_deadline = GroupTask.objects.filter(due_date__lt=timezone.now())
+#     due_date_threshold = timezone.now() + timedelta(days=1)
+#     groups = MyGroup.objects.all()
+#     for group in groups:
+#         members = group.members.all()
+#         for g in GroupTaskList.objects.filter(for_group=group):
+#             due_date_tasks = GroupTask.objects.filter(group_task_list=g, due_date__lte=due_date_threshold)
+#
+#             missed_tasks = GroupTask.objects.filter(group_task_list=g, due_date__lt=timezone.now())
+#             for task in due_date_tasks:
+#                 for member in members:
+#                     if missed_tasks.filter(id=task.id).exists():
+#                         notification_message = f"GROUP: Missed deadline for '{task.name}'!"
+#                     else:
+#                         notification_message = f"GROUP: Task '{task.name}' is due soon!"
+#                     print(task, ' : ', member)
+#
+#     return render(request, 'tasks/test.html')
+
+
+# if group_tasks_missed_deadline.filter(id=task.id).exists():
+#     notification_message = f"GROUP: Missed deadline for '{task.name}'!"
+# else:
+#     notification_message = f"GROUP: Task '{task.name}' is due soon!"
+#
+# existing_notification, _ = Notification.objects.update_or_create(
+#     group_task=task,
+#     defaults={'message': notification_message, 'user': user}
+# )
+def end_task(request, user_task_list_id, user_task_id):
+    task_list = UserTaskList.objects.get(id=user_task_list_id)
+    task = UserTask.objects.get(id=user_task_id, user_task_list=task_list)
+    task.set_completed()
+    task.completed_at = timezone.now()
+    task.save()
+
+    return redirect('/tasks-in-progress')

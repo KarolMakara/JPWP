@@ -30,7 +30,7 @@
                 <tbody>
                   <tr>
                     <td class="col-md-8"><h4>Task name</h4></td>
-                    <td class="col-md-2"><h4>Deadline</h4></td>
+                    <td class="col-md-2"><h4>Completed</h4></td>
                     <td class="td-actions justify-content-end col-md-4 pull-right">
                     </td>
                     </tr>
@@ -41,7 +41,7 @@
                               
                     {% with current_task_list_id=task.user_task_list.id task_id=task.id %}
                       <td class="col-md-8"><a href="{% url 'task_show' user_task_list_id=current_task_list_id user_task_id=task_id %}" style="color: green">{{ task.name }}</a></td>
-                      <td class="col-md-2">{{ task.due_date|date:"M d, Y"}}</td>
+                      <td class="col-md-2">{{ task.completed_at|date:"M d, Y"}}</td>
                       <td class="">
                       </td>
 
