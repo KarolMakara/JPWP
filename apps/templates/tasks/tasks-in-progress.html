@@ -60,7 +60,7 @@
                         <td class="">
 
                           <div class="td-actions justify-content-end col-md-4 pull-right">
-                            <form action="{% url 'task_edit' task_list_id=current_task_list_id task_id=task_id task_status='tasks-to-do' task_type='UserTask' %}" method="GET">
+                            <form action="{% url 'task_edit' task_list_id=current_task_list_id task_id=task_id task_status='tasks-in-progress' task_type='UserTask' %}" method="GET">
                               {% csrf_token %}
                               <button type="submit" name="task-del" rel="tooltip" title="Edit Task" class="btn btn-warning btn-link btn-sm">
                                 <i class="material-icons">edit</i>
@@ -69,7 +69,7 @@
                         
 
                         
-                            <form action="{% url 'task_delete' task_list_id=current_task_list_id task_id=task_id task_status='tasks-to-do' task_type='UserTask' %}" method="DELETE">
+                            <form action="{% url 'task_delete' task_list_id=current_task_list_id task_id=task_id task_status='tasks-in-progress' task_type='UserTask' %}" method="DELETE">
                               {% csrf_token %}
                               <button type="submit" rel="tooltip" title="Remove" class="remove btn btn-danger btn-link btn-sm">
                                 <i class="material-icons">close</i>
@@ -96,9 +96,8 @@
                       {% endif %}
 
                         {% if user == task.group_task_list.for_group.owner %}
-
                         <td class="">
-                          <form action="{% url 'end_task' task_list_id=current_task_list_id task_id=task_id task_type='GroupTask' view='' %}" method="POST">
+                          <form action="{% url 'end_task' task_list_id=current_task_list_id task_id=task_id task_type='GroupTask' view=' ' %}" method="POST">
                             {% csrf_token %}
                             <button type="submit" name="end-task" rel="tooltip" title="mark as done" class="btn btn-warning btn-link btn-sm move">
                               Done
@@ -109,7 +108,7 @@
                         <td class="">
 
                           <div class="td-actions justify-content-end col-md-4 pull-right">
-                            <form action="{% url 'task_edit' task_list_id=current_task_list_id task_id=task_id task_status='tasks-to-do' task_type='GroupTask' %}" method="GET">
+                            <form action="{% url 'task_edit' task_list_id=current_task_list_id task_id=task_id task_status='tasks-in-progress' task_type='GroupTask' %}" method="GET">
                               {% csrf_token %}
                               <button type="submit" name="task-del" rel="tooltip" title="Edit Task" class="btn btn-warning btn-link btn-sm">
                                 <i class="material-icons">edit</i>
@@ -118,7 +117,7 @@
                         
 
                         
-                            <form action="{% url 'task_delete' task_list_id=current_task_list_id task_id=task_id task_status='tasks-to-do' task_type='GroupTask' %}" method="DELETE">
+                            <form action="{% url 'task_delete' task_list_id=current_task_list_id task_id=task_id task_status='tasks-in-progress' task_type='GroupTask' %}" method="DELETE">
                               {% csrf_token %}
                               <button type="submit" rel="tooltip" title="Remove" class="remove btn btn-danger btn-link btn-sm">
                                 <i class="material-icons">close</i>
