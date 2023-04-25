@@ -5,31 +5,32 @@ $(document).ready(function() {
 
   });
 
-  setInterval(updateTable, 60000);
+  setInterval(updateTable, 10000);
 
 function updateTable() {
         $.ajax({
             url: '/notifications-data',
             type: 'POST',
             data: {
-                // Send any necessary data to the view
-                // ...
+
             },
             success: function(response) {
-              // Update the table with the new data
-              var notifications = response.notifications; // <-- get the notifications data
+
+              var notifications = response.notifications;
               console.log(notifications)
     
-              // Clear the existing rows from the table
               $('#notifications').empty();
 
               $('#notifications_count').empty();
               $('#notifications_count').append(notifications[0].count)
     
-              // Append the updated rows to the table
               notifications.forEach(function(notification) {
+                var danger = '';
+                  if (notification.message.includes('Missed')){
+                    danger = 'text-danger';
+                  }
                   $('#notifications').append(`
-                   <a class="dropdown-item" href="/notifications/mark-as-seen/${notification.id}/">${notification.message}</a>
+                   <a class="dropdown-item ${danger}" href="/notifications/mark-as-seen/${notification.id}">${notification.message}</a>
                   `);
               });
             },

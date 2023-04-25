@@ -1,0 +1,80 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Task Add {% endblock %} 
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header card-header-primary d-flex justify-content-center">
+          <h4 class="card-title">
+            {{ group.name }}
+          </h4>
+        </div>
+        <div class="card-body">
+
+            <form role="form" method="post" action="">
+
+                {% csrf_token %}
+            
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label class="bmd-label-floating">Name:</label>
+                            <input type="text" class="form-control" id="group-name" name="name" value="{{ group.name }}">
+                        </div>
+                        <span class="text-danger">{{ form.name.errors }}</span>
+                    </div>
+                </div>
+            
+            
+                <br />
+            
+                <div class="row">
+                    <div class="col-md-12">
+            
+                        <div class="form-group">
+                            <label class="bmd-label-floating">Members:</label>
+                            {{ form.members }}
+                        </div>
+                    </div>
+                </div>
+                <span class="text-danger">{{ form.members.errors }}</span>
+            
+                <br />
+            
+                <div class="row">
+                    <div class="col-md-12">
+            
+                        <div class="form-group">
+                            <label class="bmd-label-floating">Notification Before:</label>
+                            <input type="number" class="form-control" id="notification-before" name="notification_before" value="{{ group.notification_before }}">
+                        </div>
+                    </div>
+                </div>
+                <span class="text-danger">{{ form.notification_before.errors }}</span>
+            
+                <br />
+            
+                <button type="submit" name="group-edit" class="btn btn-primary pull-right">Edit Group</button>
+            
+            
+            
+                <div class="clearfix"></div>
+            
+            </form>
+            
+
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+{% endblock content %}
+
+{% block javascripts %}
+{% endblock javascripts %}

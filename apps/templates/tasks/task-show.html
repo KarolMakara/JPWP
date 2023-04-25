@@ -36,6 +36,7 @@
                 </div>
             </div>    
 
+          {% if task_type == "GroupTask" %}
             </br>
             </br>
 
@@ -43,12 +44,63 @@
             <div class="col-md-12">
                 List:
                 </br>
-                {{ user_task_list_name }}
+                {{ task_list_name }}
             </div>
             </div>
-                
+          </br>
+          </br>
+            <div class="row">
+            <div class="col-md-12">
+                Group:
+                </br>
+                {{ group_name }}
+            </div>
+            </div>
+          </br>
+          </br>
 
+            {% with task_list_id=task.group_task_list.id task_id=task.id %}
+            <form action="{% url 'task_edit' task_list_id=task_list_id task_id=task.id task_status='groups' task_type='GroupTask' %}" method="GET">
+              {% csrf_token %}
+              <button type="submit" name="task-edit" class="btn btn-primary pull-left">Edit Task</button>
+            </form> 
 
+        
+            <form action="{% url 'task_delete' task_list_id=task_list_id task_id=task.id task_status='groups' task_type='GroupTask' %}" method="DELETE">
+              {% csrf_token %}
+              <button type="submit" name="task-del" class="btn btn-primary pull-right .remove">Delete Task</button>
+            </form>
+          {% endwith %}
+
+          {% else %}
+          </br>
+          </br>
+
+          <div class="row">
+          <div class="col-md-12">
+              List:
+              </br>
+              {{ task_list_name }}
+          </div>
+          </div>
+          </br>
+          </br>
+          {% with task_list_id=task.user_task_list.id task_id=task.id %}
+            <form action="{% url 'task_edit' task_list_id=task_list_id task_id=task.id task_status='groups' task_type='UserTask' %}" method="GET">
+              {% csrf_token %}
+              <button type="submit" name="task-edit" class="btn btn-primary pull-left">Edit Task</button>
+            </form> 
+
+        
+            <form action="{% url 'task_delete' task_list_id=task_list_id task_id=task.id task_status='groups' task_type='UserTask' %}" method="DELETE">
+              {% csrf_token %}
+              <button type="submit" name="task-del" class="btn btn-primary pull-right .remove">Delete Task</button>
+            </form>
+          {% endwith %}
+          {% endif %}
+
+            
+          </div>
         </div>
       </div>
     </div>
@@ -59,16 +111,8 @@
 <!-- Specific Page JS goes HERE  -->
 {% block javascripts %}
 <script>
-  // get the form elements
-var datepicker = document.getElementById('datepicker');
-var hours = document.getElementById('hours');
-var minutes = document.getElementById('minutes');
-
-// set the default date and time
-var defaultDate = new Date();
-datepicker.value = defaultDate.toLocaleDateString();
-hours.value = defaultDate.getHours().toString().padStart(2, '0');
-minutes.value = defaultDate.getMinutes().toString().padStart(2, '0');
-
+$(document).on('click', '.remove', function(){
+      return confirm('Are you sure you want to update this?');
+  })
 </script>
 {% endblock javascripts %}

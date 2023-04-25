@@ -19,7 +19,7 @@ class Category(models.Model):
 
 class Task(models.Model):
     name = models.CharField(max_length=255, null=True)
-    category = models.OneToOneField(Category, on_delete=models.CASCADE, null=True)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, null=True)
     description = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
@@ -48,7 +48,10 @@ class Task(models.Model):
         return self
 
     def __str__(self):
-        return self.name
+        if self.name:
+            return self.name
+        else:
+            return ""
 
     def is_past_due(self):
         if self.due_date == "":
@@ -113,3 +116,9 @@ class Notification(models.Model):
 
     def __str__(self):
         return self.message
+
+    def has_user_task(self):
+        return isinstance(self.user_task, UserTask)
+
+    def has_group_task(self):
+        return isinstance(self.group_task, GroupTask)

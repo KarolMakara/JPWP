@@ -10,10 +10,12 @@
 <div class="container">
      <div class="row mt-3">
       <div class="col-md-12">
-          <div class="d-flex justify-content-end">
-              <button id="previous-month-btn" class="btn btn-primary">Previous month</button>
+          <div class="d-flex pull-right">
               <button id="next-month-btn" class="btn btn-primary">Next month</button>
           </div>
+          <div class="d-flex">
+            <button id="previous-month-btn" class="btn btn-primary">Previous month</button>
+        </div>
       </div>
     </div>
     <div class="col-lg-12 col-md-12">
@@ -23,56 +25,24 @@
                     <div class="tab-pane active" id="profile">
                         <table class="table">
                             <thead class="text-warning">
-                            <th>Done</th>
                             <th>Deadline</th>
                             <th>Title</th>
                             <th>Description</th>
-                            <th>Option</th>
                             <th>Category</th>
                             </thead>
                             <tbody>
                             {% for task in user_tasks_month %}
                             <tr>
-                                <td class="col-md-1" style="width: 20px">
-                                    <div class="form-check">
-                                        <label class="form-check-label">
-                                            <input class="form-check-input" type="checkbox" value="">
-                                            <span class="form-check-sign">
-                        <span class="check"></span>
-                    </span>
-                                        </label>
-                                    </div>
-                                </td>
                                 <td class="col-md-2">{{ task.due_date|date:"d.m.Y"}}</td>
-                                <td class="col-md-8">{{ task.name }}</td>
-                                <td class="col-md-8">{{ task.description }}</td>
-                                <td class="col-md-8">{{ task.usertask.user_task_list.name }}</td>
+                                <td class="col-md-3">{{ task.name }}</td>
+                                <td class="col-md-5">{{ task.description }}</td>
+                                <td class="col-md-3">{{ task.usertask.user_task_list.name }}</td>
                                 <td class="td-actions justify-content-end col-md-4 pull-right">
-                                    {% with task_id=task.id %}
-                                    <form action="{% url 'task_edit' user_task_list_id=current_task_list_id user_task_id=task_id task_status='lists' %}"
-                                          method="GET">
-                                        {% csrf_token %}
-                                        <button class="btn btn-primary btn-link btn-sm" name="task-del" rel="tooltip" title="Edit Task"
-                                                type="submit">
-                                            <i class="material-icons">edit</i>
-                                        </button>
-                                    </form>
-                                    {% endwith %}
-                                    {% with task_id=task.id %}
-                                    <form action="{% url 'task_delete' user_task_list_id=current_task_list_id user_task_id=task_id task_status='lists' %}"
-                                          method="PATCH">
-                                        {% csrf_token %}
-                                        <button class="remove btn btn-danger btn-link btn-sm" rel="tooltip" title="Remove"
-                                                type="submit">
-                                            <i class="material-icons">close</i>
-                                        </button>
-                                    </form>
-                                    {% endwith %}
                                 </td>
                             </tr>
                             {% empty %}
                             <tr>
-                                <th colspan="6">Brak zadań na ten miesiąc</th>
+                                <th colspan="6">No tasks found for this month</th>
                             </tr>
                             {% endfor %}
                             <tr>
@@ -89,51 +59,18 @@
                             {% for task in user_tasks_past %}
                             <!--{% if task.due_date and task.due_date.date != current_date %}-->
                             <tr style="color: red;">
-                                <td class="col-md-1" style="width: 20px">
-                                    <div class="form-check">
-                                        <label class="form-check-label">
-                                            <input class="form-check-input" type="checkbox" value="">
-                                            <span class="form-check-sign">
-                                      <span class="check"></span>
-                                      </span>
-                                        </label>
-                                    </div>
-                                </td>
                                 <td class="col-md-2">{{ task.due_date|date:"d.m.Y"}}</td>
-                                <td class="col-md-8">{{ task.name }}</td>
-                                <td class="col-md-8">{{ task.description }}</td>
-                                <td class="col-md-8">{{ task.usertask.user_task_list.name }}</td>
+                                <td class="col-md-3">{{ task.name }}</td>
+                                <td class="col-md-5">{{ task.description }}</td>
+                                <td class="col-md-3">{{ task.usertask.user_task_list.name }}</td>
                                 <td class="td-actions justify-content-end col-md-4 pull-right">
-
-
-                                    {% with task_id=task.id %}
-                                    <form action="{% url 'task_edit' user_task_list_id=current_task_list_id user_task_id=task_id task_status='lists' %}"
-                                          method="GET">
-                                        {% csrf_token %}
-                                        <button type="submit" name="task-del" rel="tooltip" title="Edit Task"
-                                                class="btn btn-primary btn-link btn-sm">
-                                            <i class="material-icons">edit</i>
-                                        </button>
-                                    </form>
-                                    {% endwith %}
-
-                                    {% with task_id=task.id %}
-                                    <form action="{% url 'task_delete' user_task_list_id=current_task_list_id user_task_id=task_id task_status='lists' %}"
-                                          method="PATCH">
-                                        {% csrf_token %}
-                                        <button type="submit" rel="tooltip" title="Remove"
-                                                class="remove btn btn-danger btn-link btn-sm">
-                                            <i class="material-icons">close</i>
-                                        </button>
-                                    </form>
-                                    {% endwith %}
 
                                 </td>
                             </tr>
                             <!--{% endif %}-->
                             {% empty %}
                                 <tr>
-                                    <th colspan="6">Brak zaległych zadań</th>
+                                    <th colspan="6">No tasks found</th>
                                 </tr>
                             {% endfor %}
                             </tbody>
@@ -148,60 +85,25 @@
             <div class="card-body table-responsive">
                 <table class="table">
                     <thead class="text-warning">
-                    <th>Done</th>
                     <th>Title</th>
                     <th>Description</th>
                     <th>Category</th>
-                    <th>Option</th>
                     </thead>
                     <tbody>
                     {% for task in user_tasks %}
                             <!--{% if not task.due_date %}-->
                             <tr>
-                                <td class="col-md-1" style="width: 20px">
-                                    <div class="form-check">
-                                        <label class="form-check-label">
-                                            <input class="form-check-input" type="checkbox" value="">
-                                            <span class="form-check-sign">
-                                      <span class="check"></span>
-                                      </span>
-                                        </label>
-                                    </div>
-                                </td>
-                                <td class="col-md-8">{{ task.name }}</td>
-                                <td class="col-md-8">{{ task.description }}</td>
-                                <td class="col-md-8">{{ task.usertask.user_task_list.name }}</td>
+                                <td class="col-md-3">{{ task.name }}</td>
+                                <td class="col-md-6">{{ task.description }}</td>
+                                <td class="col-md-3">{{ task.category }}</td>
                                 <td class="td-actions justify-content-end col-md-4 pull-right">
-
-
-                                    {% with task_id=task.id %}
-                                    <form action="{% url 'task_edit' user_task_list_id=current_task_list_id user_task_id=task_id task_status='lists' %}"
-                                          method="GET">
-                                        {% csrf_token %}
-                                        <button type="submit" name="task-del" rel="tooltip" title="Edit Task"
-                                                class="btn btn-primary btn-link btn-sm">
-                                            <i class="material-icons">edit</i>
-                                        </button>
-                                    </form>
-                                    {% endwith %}
-
-                                    {% with task_id=task.id %}
-                                    <form action="{% url 'task_delete' user_task_list_id=current_task_list_id user_task_id=task_id task_status='lists' %}"
-                                          method="PATCH">
-                                        {% csrf_token %}
-                                        <button type="submit" rel="tooltip" title="Remove"
-                                                class="remove btn btn-danger btn-link btn-sm">
-                                            <i class="material-icons">close</i>
-                                        </button>
-                                    </form>
-                                    {% endwith %}
 
                                 </td>
                             </tr>
                             <!--{% endif %}-->
                             {% empty %}
                                 <tr>
-                                    <th colspan="5">Brak ogólnycn zadań</th>
+                                    <th colspan="5">No tasks found</th>
                                 </tr>
                             {% endfor %}
                     </tbody>

@@ -61,11 +61,3 @@ class SignUpForm(UserCreationForm):
         fields = ('username', 'email', 'password1', 'password2')
 
 
-class UserSettingsForm(forms.ModelForm):
-    class Meta:
-        model = MyUser
-        fields = ('notification_before', 'daily_report_at')
-        widgets = {
-            'notification_before': forms.TextInput(attrs={'class': 'form-control'}),
-            'daily_report_at': forms.TextInput(attrs={'type': 'time', 'class': 'form-control'}),
-        }

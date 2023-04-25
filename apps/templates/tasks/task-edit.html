@@ -56,7 +56,17 @@
                   </div>
                 </div>
                 <span class="text-danger">{{ form.due_date.errors }}</span>
-  
+                
+                <div class="row">
+                  <div class="col-md-12">
+                    
+                    <div class="form-group">
+                      <label class="bmd-label-floating">Category:</label>
+                      {{ form.category }}
+                  </div>
+                  </div>
+                </div>
+                <span class="text-danger">{{ form.category.errors }}</span>
   
                 <button type="submit" name="task-add" class="btn btn-primary pull-right">Edit Task</button>
   
@@ -75,17 +85,4 @@
 
 <!-- Specific Page JS goes HERE  -->
 {% block javascripts %}
-<script>
-  // get the form elements
-var datepicker = document.getElementById('datepicker');
-var hours = document.getElementById('hours');
-var minutes = document.getElementById('minutes');
-
-// set the default date and time
-var defaultDate = new Date();
-datepicker.value = defaultDate.toLocaleDateString();
-hours.value = defaultDate.getHours().toString().padStart(2, '0');
-minutes.value = defaultDate.getMinutes().toString().padStart(2, '0');
-
-</script>
 {% endblock javascripts %}

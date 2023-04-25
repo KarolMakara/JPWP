@@ -1,4 +1,7 @@
+import humanize
 from celery import shared_task
+from django.utils.timesince import timesince
+
 from apps.tasks.models import *
 
 
@@ -14,7 +17,8 @@ def send_upcoming_task_notifications():
             if user_tasks_missed_deadline.filter(id=task.id).exists():
                 notification_message = f"USER: Missed deadline for '{task.name}'!"
             else:
-                notification_message = f"USER: Task '{task.name}' is due soon!"
+                time_due = humanize.precisedelta(timezone.now() - task.due_date, minimum_unit="minutes", format="%d")
+                notification_message = f"USER: Task '{task.name}' is due soon! ({time_due})"
 
             existing_notification, _ = Notification.objects.update_or_create(
                 user_task=task,
@@ -34,7 +38,8 @@ def send_upcoming_task_notifications():
                     if missed_tasks.filter(id=task.id).exists():
                         notification_message = f"GROUP: Missed deadline for '{task.name}'!"
                     else:
-                        notification_message = f"GROUP: Task '{task.name}' is due soon!"
+                        time_due = humanize.precisedelta(timezone.now() - task.due_date, minimum_unit="minutes", format="%d")
+                        notification_message = f"GROUP: Task '{task.name}' is due soon! ({time_due})"
                     existing_notification, _ = Notification.objects.update_or_create(
                         group_task=task,
                         user=member,

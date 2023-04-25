@@ -19,7 +19,7 @@ app.config_from_object('django.conf:settings', namespace='CELERY')
 app.conf.beat_schedule = {
     "get_notifications": {
         "task": "apps.tasks.tasks.send_upcoming_task_notifications",
-        "schedule": timedelta(seconds=60),
+        "schedule": timedelta(seconds=5),
     },
 }
 # Load task modules from all registered Django apps.
