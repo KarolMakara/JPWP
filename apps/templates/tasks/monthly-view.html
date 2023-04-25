@@ -7,74 +7,44 @@
 
 
 {% block content %}
-<div class="row">
-    <div class="col-lg-6 col-md-12">
+<div class="container">
+     <div class="row mt-3">
+      <div class="col-md-12">
+          <div class="d-flex pull-right">
+              <button id="next-month-btn" class="btn btn-primary">Next month</button>
+          </div>
+          <div class="d-flex">
+            <button id="previous-month-btn" class="btn btn-primary">Previous month</button>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-12 col-md-12">
         <div class="card">
             <div class="card-body">
                 <div class="tab-content">
                     <div class="tab-pane active" id="profile">
                         <table class="table">
                             <thead class="text-warning">
-                            <th>Done</th>
                             <th>Deadline</th>
                             <th>Title</th>
                             <th>Description</th>
-                            <th>Option</th>
                             <th>Category</th>
                             </thead>
                             <tbody>
+                            {% for task in user_tasks_month %}
                             <tr>
-                                <td>
-                                    <div class="form-check">
-                                        <label class="form-check-label">
-                                            <input class="form-check-input" type="checkbox" value="" checked>
-                                            <span class="form-check-sign">
-                            <span class="check"></span>
-                          </span>
-                                        </label>
-                                    </div>
-                                </td>
-                                <td>20.04.2023</td>
-                                <td>Zrobić widok strony na JPWP</td>
-                                <td>Tygodniowy, dzienny i miesięczny</td>
-                                <td>Studia</td>
-                                <td class="td-actions text-right">
-                                    <button type="button" rel="tooltip" title="Edit Task"
-                                            class="btn btn-primary btn-link btn-sm">
-                                        <i class="material-icons">edit</i>
-                                    </button>
-                                    <button type="button" rel="tooltip" title="Remove"
-                                            class="btn btn-danger btn-link btn-sm">
-                                        <i class="material-icons">close</i>
-                                    </button>
+                                <td class="col-md-2">{{ task.due_date|date:"d.m.Y"}}</td>
+                                <td class="col-md-3">{{ task.name }}</td>
+                                <td class="col-md-5">{{ task.description }}</td>
+                                <td class="col-md-3">{{ task.usertask.user_task_list.name }}</td>
+                                <td class="td-actions justify-content-end col-md-4 pull-right">
                                 </td>
                             </tr>
+                            {% empty %}
                             <tr>
-                                <td>
-                                    <div class="form-check">
-                                        <label class="form-check-label">
-                                            <input class="form-check-input" type="checkbox" value="">
-                                            <span class="form-check-sign">
-                            <span class="check"></span>
-                          </span>
-                                        </label>
-                                    </div>
-                                </td>
-                                <td>30.04.2023</td>
-                                <td>Spotaknie w sprawie dotacji</td>
-                                <td>Spotaknie w Urzędzie Pracy z inwestorem</td>
-                                <td>Interes</td>
-                                <td class="td-actions text-right">
-                                    <button type="button" rel="tooltip" title="Edit Task"
-                                            class="btn btn-primary btn-link btn-sm">
-                                        <i class="material-icons">edit</i>
-                                    </button>
-                                    <button type="button" rel="tooltip" title="Remove"
-                                            class="btn btn-danger btn-link btn-sm">
-                                        <i class="material-icons">close</i>
-                                    </button>
-                                </td>
+                                <th colspan="6">No tasks found for this month</th>
                             </tr>
+                            {% endfor %}
                             <tr>
                                 <td></td>
                                 <td></td>
@@ -86,32 +56,23 @@
                             <tr style="color: red; font-weight: bold; font-size: 1.5em; text-align: center;">
                                 <th colspan="6">After deadline</th>
                             </tr>
+                            {% for task in user_tasks_past %}
+                            <!--{% if task.due_date and task.due_date.date != current_date %}-->
                             <tr style="color: red;">
-                                <td>
-                                    <div class="form-check">
-                                        <label class="form-check-label">
-                                            <input class="form-check-input" type="checkbox" value="">
-                                            <span class="form-check-sign">
-                                                <span class="check"></span>
-                                            </span>
-                                        </label>
-                                    </div>
-                                </td>
-                                <td>17.03.2023</td>
-                                <td>Skończyć projekt dla klienta</td>
-                                <td>Każdy swoją część powinien wysłać do menagera</td>
-                                <td>Praca</td>
-                                <td class="td-actions text-right">
-                                    <button type="button" rel="tooltip" title="Edit Task"
-                                            class="btn btn-primary btn-link btn-sm">
-                                        <i class="material-icons">edit</i>
-                                    </button>
-                                    <button type="button" rel="tooltip" title="Remove"
-                                            class="btn btn-danger btn-link btn-sm">
-                                        <i class="material-icons">close</i>
-                                    </button>
+                                <td class="col-md-2">{{ task.due_date|date:"d.m.Y"}}</td>
+                                <td class="col-md-3">{{ task.name }}</td>
+                                <td class="col-md-5">{{ task.description }}</td>
+                                <td class="col-md-3">{{ task.usertask.user_task_list.name }}</td>
+                                <td class="td-actions justify-content-end col-md-4 pull-right">
+
                                 </td>
                             </tr>
+                            <!--{% endif %}-->
+                            {% empty %}
+                                <tr>
+                                    <th colspan="6">No tasks found</th>
+                                </tr>
+                            {% endfor %}
                             </tbody>
                         </table>
                     </div>
@@ -119,70 +80,93 @@
             </div>
         </div>
     </div>
-    <div class="col-lg-6 col-md-12">
+    <div class="col-lg-12 col-md-12">
         <div class="card">
             <div class="card-body table-responsive">
                 <table class="table">
                     <thead class="text-warning">
-                    <th>Done</th>
                     <th>Title</th>
                     <th>Description</th>
                     <th>Category</th>
-                    <th>Option</th>
                     </thead>
                     <tbody>
-                    <tr>
-                        <td>
-                            <div class="form-check">
-                                <label class="form-check-label">
-                                    <input class="form-check-input" type="checkbox" value="">
-                                    <span class="form-check-sign">
-                            <span class="check"></span>
-                          </span>
-                                </label>
-                            </div>
-                        </td>
-                        <td>Wynieść śmieci</td>
-                        <td></td>
-                        <td class="td-actions text-right">
-                            <button type="button" rel="tooltip" title="Edit Task"
-                                    class="btn btn-primary btn-link btn-sm">
-                                <i class="material-icons">edit</i>
-                            </button>
-                            <button type="button" rel="tooltip" title="Remove" class="btn btn-danger btn-link btn-sm">
-                                <i class="material-icons">close</i>
-                            </button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <div class="form-check">
-                                <label class="form-check-label">
-                                    <input class="form-check-input" type="checkbox" value="">
-                                    <span class="form-check-sign">
-                            <span class="check"></span>
-                          </span>
-                                </label>
-                            </div>
-                        </td>
-                        <td>Spakować się do domu</td>
-                        <td>Pamiętaj o laptopie, ładowarce, książkach i okularach</td>
-                        <td class="td-actions text-right">
-                            <button type="button" rel="tooltip" title="Edit Task"
-                                    class="btn btn-primary btn-link btn-sm">
-                                <i class="material-icons">edit</i>
-                            </button>
-                            <button type="button" rel="tooltip" title="Remove" class="btn btn-danger btn-link btn-sm">
-                                <i class="material-icons">close</i>
-                            </button>
-                        </td>
-                    </tr>
+                    {% for task in user_tasks %}
+                            <!--{% if not task.due_date %}-->
+                            <tr>
+                                <td class="col-md-3">{{ task.name }}</td>
+                                <td class="col-md-6">{{ task.description }}</td>
+                                <td class="col-md-3">{{ task.category }}</td>
+                                <td class="td-actions justify-content-end col-md-4 pull-right">
+
+                                </td>
+                            </tr>
+                            <!--{% endif %}-->
+                            {% empty %}
+                                <tr>
+                                    <th colspan="5">No tasks found</th>
+                                </tr>
+                            {% endfor %}
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
 </div>
+<script>
+        document.getElementById('previous-month-btn').addEventListener('click', function() {
+            var url = window.location.href;
+            var match = url.match(/date=(\d{4})-(\d{2})-(\d{2})/);
+            var date;
+            if (match) {
+                var year = parseInt(match[1]);
+                var month = parseInt(match[2]);
+                var day = parseInt(match[3]);
+                date = new Date(year, month - 1, day);
+            } else {
+                date = new Date();
+            }
+            date.setMonth(date.getMonth() - 1);
+            date.setDate(1);
+            var newUrl = url;
+            if (match) {
+                newUrl = newUrl.replace(/date=\d{4}-\d{2}-\d{2}/, 'date=' + formatDate(date));
+            } else {
+                newUrl += '?date=' + formatDate(date);
+            }
+            window.location.href = newUrl;
+        });
+
+        document.getElementById('next-month-btn').addEventListener('click', function() {
+            var url = window.location.href;
+            var match = url.match(/date=(\d{4})-(\d{2})-(\d{2})/);
+            var date;
+            if (match) {
+                var year = parseInt(match[1]);
+                var month = parseInt(match[2]);
+                var day = parseInt(match[3]);
+                date = new Date(year, month - 1, day);
+            } else {
+                date = new Date();
+            }
+            date.setMonth(date.getMonth() + 1);
+            date.setDate(1);
+            var newUrl = url;
+            if (match) {
+                newUrl = newUrl.replace(/date=\d{4}-\d{2}-\d{2}/, 'date=' + formatDate(date));
+            } else {
+                newUrl += '?date=' + formatDate(date);
+            }
+            window.location.href = newUrl;
+        });
+
+        function formatDate(date) {
+            var year = date.getFullYear();
+            var month = ('0' + (date.getMonth() + 1)).slice(-2);
+            var day = ('0' + date.getDate()).slice(-2);
+            return year + '-' + month + '-' + day;
+        }
+    </script>
+
 {% endblock content %}
 
 <!-- Specific Page JS goes HERE  -->

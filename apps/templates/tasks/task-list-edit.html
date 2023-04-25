@@ -11,7 +11,7 @@
       <div class="card">
         <div class="card-header card-header-primary d-flex justify-content-center">
           <h4 class="card-title">
-            Add Task List
+            {{ task_list.name }}
           </h4>
         </div>
         <div class="card-body">
@@ -24,7 +24,7 @@
                     <div class="col-md-12">
                         <div class="form-group">
                             <label class="bmd-label-floating">Name:</label>
-                            <input type="text" class="form-control" id="task-name" name="name" value="{{ task.name }}">
+                            <input type="text" class="form-control" id="task-name" name="name" value="{{ task_list.name }}">
                         </div>
                         <span class="text-danger">{{ form.name.errors }}</span>
                     </div>
@@ -33,7 +33,7 @@
                 <span class="text-danger">{{ form.category.errors }}</span>
   
   
-                <button type="submit" name="task-list-add" class="btn btn-primary pull-right">Add Task List</button>
+                <button type="submit" name="task-list-add" class="btn btn-primary pull-right">Edit Task List</button>
   
 
                 

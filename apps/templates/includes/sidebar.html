@@ -8,22 +8,28 @@
         <ul class="nav">
         {% if request.user.is_authenticated %}
 
-          <li class="nav-item {% if 'index' in segment %} active {% endif %}">
+          <li id="nav-dashboard" class="nav-item">
             <a class="nav-link" href="/">
               <i class="material-icons">dashboard</i>
               <p>Dashboard</p>
             </a>
           </li>
-          <li class="nav-item {% if 'page-user' in segment %} active {% endif %}">
-            <a class="nav-link" href="/page-user.html">
+          <li id='nav-profile' class="nav-item">
+            <a class="nav-link" href="{% url 'edit_profile_settings' %}">
               <i class="material-icons">person</i>
               <p>User Profile</p>
             </a>
           </li>
-          <li class="nav-item {% if 'ui-tables' in segment %} active {% endif %}">
+          <li id='nav-user-tasks' class="nav-item">
             <a class="nav-link" href="/task-list">
               <i class="material-icons">content_paste</i>
-              <p>Tasks List</p>
+              <p>User Tasks</p>
+            </a>
+          </li>
+          <li id='nav-group-tasks' class="nav-item">
+            <a class="nav-link" href="/groups">
+              <i class="material-icons">content_paste</i>
+              <p>Group Tasks</p>
             </a>
           </li>
           <li class="nav-item ">
@@ -35,16 +41,7 @@
 
           
 
-        {% else %}
-
-          <li class="nav-item active">
-            <a class="nav-link" 
-               target="_blank" rel="noopener noreferrer"  
-               href="https://appseed.us/admin-dashboards/django-dashboard-material-pro">
-              <i class="material-icons">unarchive</i>
-              <p>PRO Version</p>
-            </a>
-          </li>          
+        {% else %}          
 
         {% endif %}
         </ul>
