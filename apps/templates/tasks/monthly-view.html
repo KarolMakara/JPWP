@@ -33,11 +33,25 @@
                             <tbody>
                             {% for task in user_tasks_month %}
                             <tr>
-                                <td class="col-md-2">{{ task.due_date|date:"d.m.Y"}}</td>
-                                <td class="col-md-3">{{ task.name }}</td>
-                                <td class="col-md-5">{{ task.description }}</td>
-                                <td class="col-md-3">{{ task.usertask.user_task_list.name }}</td>
-                                <td class="td-actions justify-content-end col-md-4 pull-right">
+                                <td class="col-md-2">{{ task.due_date|date:"H:i"}}</td>
+                                {% if task.get_instance == "UserTask" %}
+                                    {% with current_task_list_id=task.user_task_list.id task_id=task.id %}
+                                        <td class="col-md-8"><a href="{% url 'task_show' task_list_id=current_task_list_id task_id=task_id task_type='UserTask' %}"
+                                            style="color: black">{{ task.name }}</a></td>
+                                        <td class="col-md-8">{{ task.description }}</td>
+                                        <td class="col-md-8">{{ task.user_task_list.name }}</td>
+                                    {% endwith %}
+                                {% else %}
+                                    {% with current_task_list_id=task.group_task_list.id task_id=task.id %}
+                                        <td class="col-md-8"><a href="{% url 'task_show' task_list_id=current_task_list_id task_id=task_id task_type='GroupTask' %}"
+                                                style="color: black">{{ task.name }}</a></td>
+                                        <td class="col-md-8">{{ task.description }}</td>
+                                        <td class="col-md-8">{{ task.group_task_list.name }}</td>
+                                    {% endwith %}
+                                {% endif %}
+                                <td class="">
+                                    <div class="td-actions justify-content-end col-md-4 pull-right">
+                                </div>
                                 </td>
                             </tr>
                             {% empty %}
@@ -59,12 +73,25 @@
                             {% for task in user_tasks_past %}
                             <!--{% if task.due_date and task.due_date.date != current_date %}-->
                             <tr style="color: red;">
-                                <td class="col-md-2">{{ task.due_date|date:"d.m.Y"}}</td>
-                                <td class="col-md-3">{{ task.name }}</td>
-                                <td class="col-md-5">{{ task.description }}</td>
-                                <td class="col-md-3">{{ task.usertask.user_task_list.name }}</td>
-                                <td class="td-actions justify-content-end col-md-4 pull-right">
-
+                                <td class="col-md-2">{{ task.due_date|date:"H:i"}}</td>
+                                {% if task.get_instance == "UserTask" %}
+                                    {% with current_task_list_id=task.user_task_list.id task_id=task.id %}
+                                        <td class="col-md-8"><a href="{% url 'task_show' task_list_id=current_task_list_id task_id=task_id task_type='UserTask' %}"
+                                            style="color: black">{{ task.name }}</a></td>
+                                        <td class="col-md-8">{{ task.description }}</td>
+                                        <td class="col-md-8">{{ task.user_task_list.name }}</td>
+                                    {% endwith %}
+                                {% else %}
+                                    {% with current_task_list_id=task.group_task_list.id task_id=task.id %}
+                                        <td class="col-md-8"><a href="{% url 'task_show' task_list_id=current_task_list_id task_id=task_id task_type='GroupTask' %}"
+                                                style="color: black">{{ task.name }}</a></td>
+                                        <td class="col-md-8">{{ task.description }}</td>
+                                        <td class="col-md-8">{{ task.group_task_list.name }}</td>
+                                    {% endwith %}
+                                {% endif %}
+                                <td class="">
+                                    <div class="td-actions justify-content-end col-md-4 pull-right">
+                                </div>
                                 </td>
                             </tr>
                             <!--{% endif %}-->
@@ -92,12 +119,27 @@
                     <tbody>
                     {% for task in user_tasks %}
                             <!--{% if not task.due_date %}-->
-                            <tr>
-                                <td class="col-md-3">{{ task.name }}</td>
-                                <td class="col-md-6">{{ task.description }}</td>
-                                <td class="col-md-3">{{ task.usertask.user_task_list.name }}</td>
-                                <td class="td-actions justify-content-end col-md-4 pull-right">
-
+                            <tr>  
+                                
+                                <td class="col-md-2">{{ task.due_date|date:"H:i"}}</td>
+                                {% if task.get_instance == "UserTask" %}
+                                    {% with current_task_list_id=task.user_task_list.id task_id=task.id %}
+                                        <td class="col-md-8"><a href="{% url 'task_show' task_list_id=current_task_list_id task_id=task_id task_type='UserTask' %}"
+                                            style="color: black">{{ task.name }}</a></td>
+                                        <td class="col-md-8">{{ task.description }}</td>
+                                        <td class="col-md-8">{{ task.user_task_list.name }}</td>
+                                    {% endwith %}
+                                {% else %}
+                                    {% with current_task_list_id=task.group_task_list.id task_id=task.id %}
+                                        <td class="col-md-8"><a href="{% url 'task_show' task_list_id=current_task_list_id task_id=task_id task_type='GroupTask' %}"
+                                                style="color: black">{{ task.name }}</a></td>
+                                        <td class="col-md-8">{{ task.description }}</td>
+                                        <td class="col-md-8">{{ task.group_task_list.name }}</td>
+                                    {% endwith %}
+                                {% endif %}
+                                <td class="">
+                                    <div class="td-actions justify-content-end col-md-4 pull-right">
+                                </div>
                                 </td>
                             </tr>
                             <!--{% endif %}-->

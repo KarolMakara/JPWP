@@ -43,6 +43,9 @@
                       {% elif task.upcoming %}
                         <td class="col-md-8"><a href="{% url 'task_show' task_list_id=current_task_list_id task_id=task_id task_type='UserTask' %}" style="color: orange">{{ task.name }}</a></td>
                         <td class="overdue col-md-2" style="color: orange">{{ task.due_date|date:"H:i M d, Y"}}</td>
+                      {% elif task.is_completed %}
+                        <td class="col-md-8"><a href="{% url 'task_show' task_list_id=current_task_list_id task_id=task_id task_type='UserTask' %}" style="color: green">{{ task.name }}</a></td>
+                        <td class="overdue col-md-2" style="color: green">{{ task.due_date|date:"H:i M d, Y"}}</td>
                       {% else %}
                         <td class="col-md-8"><a href="{% url 'task_show' task_list_id=current_task_list_id task_id=task_id task_type='UserTask' %}" style="color: black">{{ task.name }}</a></td>
                         <td class="col-md-2">{{ task.due_date|date:"H:i M d, Y"}}</td>
@@ -90,6 +93,9 @@
                       {% elif task.upcoming %}
                         <td class="col-md-8"><a href="{% url 'task_show' task_list_id=current_task_list_id task_id=task_id task_type='GroupTask' %}" style="color: orange">{{ task.name }}</a></td>
                         <td class="overdue col-md-2" style="color: orange">{{ task.due_date|date:"H:i M d, Y"}}</td>
+                      {% elif task.is_completed %}
+                        <td class="col-md-8"><a href="{% url 'task_show' task_list_id=current_task_list_id task_id=task_id task_type='GroupTask' %}" style="color: green">{{ task.name }}</a></td>
+                        <td class="overdue col-md-2" style="color: green">{{ task.due_date|date:"H:i M d, Y"}}</td>
                       {% else %}
                         <td class="col-md-8"><a href="{% url 'task_show' task_list_id=current_task_list_id task_id=task_id task_type='GroupTask' %}" style="color: black">{{ task.name }}</a></td>
                         <td class="col-md-2">{{ task.due_date|date:"H:i M d, Y"}}</td>

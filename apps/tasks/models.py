@@ -23,7 +23,7 @@ class Task(models.Model):
     description = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
-    completed_at = models.DateField(null=True)
+    completed_at = models.DateTimeField(null=True, blank=True)
     due_date = models.DateTimeField(blank=True, null=True)
     to_do = models.BooleanField(default=True)
     in_progress = models.BooleanField(default=False)
@@ -56,12 +56,15 @@ class Task(models.Model):
     def is_past_due(self):
         if self.due_date == "":
             return
-        return timezone.now() > self.due_date
+        return timezone.now() > self.due_date and not self.completed
 
     def upcoming(self):
         if self.due_date is None or self.due_date == "":
             return
-        return timezone.now() + timedelta(days=2) > self.due_date
+        return timezone.now() + timedelta(days=2) > self.due_date and not self.completed
+
+    def is_completed(self):
+        return self.completed
 
     async def update_last_modified(self):
         # simulate some long-running task
