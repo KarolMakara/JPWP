@@ -193,13 +193,16 @@
                               
                     {% with current_task_list_id=task.group_task_list.id task_id=task.id %}
                       {% if task.is_past_due %}
-                        <td class="col-md-8"><a href="" style="color: red">{{ task.name }}</a></td>
+                        <td class="col-md-8"><a href="{% url 'task_show' task_list_id=current_task_list_id task_id=task_id task_type='GroupTask' %}" style="color: red">{{ task.name }}</a></td>
                         <td class="overdue col-md-2" style="color: red">{{ task.due_date|date:"H:i M d, Y"}}</td>
-                      {% elif task.upcoming %}
-                        <td class="col-md-8"><a href="" style="color: orange">{{ task.name }}</a></td>
+                      {% elif task.upcoming%}
+                        <td class="col-md-8"><a href="{% url 'task_show' task_list_id=current_task_list_id task_id=task_id task_type='GroupTask' %}" style="color: orange">{{ task.name }}</a></td>
                         <td class="overdue col-md-2" style="color: orange">{{ task.due_date|date:"H:i M d, Y"}}</td>
+                      {% elif task.is_completed %}
+                        <td class="col-md-8"><a href="{% url 'task_show' task_list_id=current_task_list_id task_id=task_id task_type='GroupTask' %}" style="color: green">{{ task.name }}</a></td>
+                        <td class="overdue col-md-2" style="color: green">{{ task.due_date|date:"H:i M d, Y"}}</td>
                       {% else %}
-                        <td class="col-md-8"><a href="" style="color: black">{{ task.name }}</a></td>
+                        <td class="col-md-8"><a href="{% url 'task_show' task_list_id=current_task_list_id task_id=task_id task_type='GroupTask' %}" style="color: black">{{ task.name }}</a></td>
                         <td class="col-md-2">{{ task.due_date|date:"H:i M d, Y"}}</td>
                       {% endif %}
 
@@ -241,7 +244,7 @@
                 </table>
                 {% if current_group.owner == user %}
 
-                  {% if current_task_list %}
+                  {% if current_list %}
                     {% with current_task_list_id=current_list.id %}
                       <form action="{% url 'task_add' task_list_id=current_task_list_id task_status='groups' task_type='GroupTask' %}" method="">
                           <button type="submit" name="task-add" class="btn btn-primary text-white" style="width: 100%">

@@ -1,0 +1,133 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Task Add {% endblock %} 
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-12 col-md-12">
+      <div class="card">
+        <div class="card-header card-header-tabs card-header-primary">
+          <div class="nav-tabs-navigation">
+            <div class="nav-tabs-wrapper">
+              <button type="button" name="task-add" class="btn btn-white text-dark" style="width: 100%; font-size: x-large;">
+                Daily Report ( {{ day|date:"M d, Y" }} )
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="tab-content">
+            <div class="tab-pane active" id="profile">
+              
+
+              <table class="table">
+                <tbody>
+                  <tr>
+                    <td class="col-md-4"><h4>Task name</h4></td>
+                    <td class="col-md-4"><h4>List name</h4></td>
+                    <td class="col-md-2"><h4>Category</h4></td>
+                    <td class="col-md-2"><h4>Date</h4></td>
+                  </tr>
+                  {% for task in tasks %}
+                    <tr>
+                        
+                            {% if task.get_instance == "UserTask" %}
+                                {% with current_task_list_id=task.user_task_list.id task_id=task.id %}
+                                    <td class="col-md-4">
+                                        <a href="{% url 'task_show' task_list_id=current_task_list_id task_id=task_id task_type='UserTask' %}" 
+                                            style="color: green">
+                                                {{ task.name }}
+                                        </a>
+                                    </td>
+                                    <td class="col-md-4" style="color: green">
+                                        <a href="{% url 'tasks' task_list_id=current_task_list_id %}" 
+                                                style="color: green">
+                                                {{ task.user_task_list.name }}
+                                        </a>
+                                    </td>
+
+                                    <td class="col-md-2" style="color: green">{{ task.category }}</td>
+                                    <td class="col-md-2" style="color: green">{{ task.completed_at|date:"H:i M d"}}</td>
+                                {% endwith %}
+                            {% else %}
+                                {% with current_task_list_id=task.group_task_list.id task_id=task.id id=task.group_task_list.for_group.id %}
+                                    <td class="col-md-4">
+                                        <a href="{% url 'task_show' task_list_id=current_task_list_id task_id=task_id task_type='GroupTask' %}" 
+                                            style="color: green">
+                                                {{ task.name }}
+                                        </a>
+                                    </td>
+                                    <td class="col-md-4" style="color: green">
+                                        <a href="{% url 'groups_and_lists' group_id=id group_list_id=current_task_list_id %}" 
+                                                style="color: green">
+                                                {{ task.group_task_list.name }}
+                                        </a>
+                                    </td>
+                                    <td class="col-md-2" style="color: green">{{ task.category }}</td>
+                                    <td class="col-md-2" style="color: green">{{ task.completed_at|date:"H:i M d"}}</td>
+                                {% endwith %}
+                            {% endif %}
+                        
+
+                    </tr>  
+                  {% endfor %} 
+
+                  {% for task in missed_tasks %}
+                    <tr>
+                            
+                        {% if task.get_instance == "UserTask" %}
+                            {% with current_task_list_id=task.user_task_list.id task_id=task.id %}
+                                <td class="col-md-4">
+                                    <a href="{% url 'task_show' task_list_id=current_task_list_id task_id=task_id task_type='UserTask' %}" 
+                                        style="color: red">
+                                            {{ task.name }}
+                                    </a>
+                                </td>
+                                <td class="col-md-4" style="color: red">
+                                    <a href="{% url 'tasks' task_list_id=current_task_list_id %}" 
+                                            style="color: red">
+                                            {{ task.user_task_list.name }}
+                                    </a>
+                                </td>
+                                <td class="col-md-2" style="color: red">{{ task.category }}</td>
+                                <td class="col-md-2" style="color: red">{{ task.due_date|date:"H:i M d"}}</td>
+                            {% endwith %}
+                        {% else %}
+                            {% with current_task_list_id=task.group_task_list.id task_id=task.id id=task.group_task_list.for_group.id %}
+                                <td class="col-md-4">
+                                    <a href="{% url 'task_show' task_list_id=current_task_list_id task_id=task_id task_type='GroupTask' %}" 
+                                        style="color: red">
+                                            {{ task.name }}
+                                    </a>
+                                </td>
+                                <td class="col-md-4" style="color: red">
+                                    <a href="{% url 'groups_and_lists' group_id=id group_list_id=current_task_list_id %}" 
+                                            style="color: red">
+                                            {{ task.group_task_list.name }}
+                                    </a>
+                                </td>
+                                <td class="col-md-2" style="color: red">{{ task.category }}</td>
+                                <td class="col-md-2" style="color: red">{{ task.due_date|date:"H:i M d"}}</td>
+                            {% endwith %}
+                        {% endif %}
+                    
+
+                    </tr> 
+                  {% endfor %} 
+
+                  
+                </tbody>
+                </table>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
+</div>
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+{% endblock javascripts %}

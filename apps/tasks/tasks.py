@@ -1,13 +1,30 @@
+import django
 import humanize
 from celery import shared_task
-from django.utils.timesince import timesince
 
 from apps.tasks.models import *
 
-
 @shared_task()
 def send_upcoming_task_notifications():
+    from django.utils import timezone
+    import datetime
+
+    now = timezone.now().astimezone(timezone.utc)
+    now = now.replace(second=0, microsecond=0)
+
     for user in MyUser.objects.all():
+        daily_report = Notification.objects.filter(user=user, message='Daily report').first()
+
+        user_datetime = timezone.make_aware(datetime.datetime.combine(timezone.now().date(), user.daily_report_at))
+        user_time = user_datetime.astimezone(timezone.utc).replace(second=0, microsecond=0)
+
+        if now == user_time:
+            if not daily_report:
+                Notification.objects.create(message='Daily report', user=user)
+            elif daily_report.seen is True:
+                daily_report.seen = False
+                daily_report.save()
+
         due_date_threshold = timezone.now() + timedelta(days=int(user.notification_before))
         user_tasks_due_soon = UserTask.objects.filter(due_date__lte=due_date_threshold)
         user_tasks_missed_deadline = UserTask.objects.filter(due_date__lt=timezone.now())
@@ -38,7 +55,8 @@ def send_upcoming_task_notifications():
                     if missed_tasks.filter(id=task.id).exists():
                         notification_message = f"GROUP: Missed deadline for '{task.name}'!"
                     else:
-                        time_due = humanize.precisedelta(timezone.now() - task.due_date, minimum_unit="minutes", format="%d")
+                        time_due = humanize.precisedelta(timezone.now() - task.due_date, minimum_unit="minutes",
+                                                         format="%d")
                         notification_message = f"GROUP: Task '{task.name}' is due soon! ({time_due})"
                     existing_notification, _ = Notification.objects.update_or_create(
                         group_task=task,
@@ -46,19 +64,4 @@ def send_upcoming_task_notifications():
                         defaults={'message': notification_message, 'user': member}
                     )
 
-# @shared_task
-# def send_notification(notification_id):
-#     notification = Notification.objects.get(id=notification_id, seen=False)
-#     html_message = render_to_string('home/index.html', {'notification': notification})
-#     #notification.seen = False
-#     notification.save()
-#     return HttpResponse(html_message)
 
-# @shared_task()
-# def send_notifications(user):
-#     notifications = Notification.objects.filter(user=user, seen=False)
-#     return HttpResponse('home/index.html', {'notifications': notifications})
-#     #     html_message = render_to_string('home/index.html', {'notification': notification})
-#     #     #notification.seen = False
-#     #     notification.save()
-#     #     return HttpResponse(html_message)
