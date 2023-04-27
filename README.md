@@ -31,7 +31,7 @@ Aby wyświetlić te modele na stronie należy utworzyć funkcję renderującą 
 #
 ##### Część 3:
 Spraw, aby lista zadań wraz z zadaniami pojawiły sie na stronie
-<a href="127.0.0.1/task_list">localhost/task_list</a>.
+<a href="http://127.0.0.1/task_list">localhost/task_list</a>.
 #
 
 #### Screen z rozwiązaniem należy umieścić na upelu. </br> </br>
@@ -40,7 +40,7 @@ Spraw, aby lista zadań wraz z zadaniami pojawiły sie na stronie
 
 # Zadanie 2
 
-Po przejściu na <a href="127.0.0.1/admin">panel admina</a> w zakładce my_app spraw, aby pokazał się model zadań oraz listy zadań. Po kliknięciu w model zadań powinny wyświetlić się wszystkie zadania wraz z ich polem nazwy oraz z deadlinem posortowanym od tych najbliższych.
+Po przejściu na <a href="http://127.0.0.1/admin">panel admina</a> w zakładce my_app spraw, aby pokazał się model zadań oraz listy zadań. Po kliknięciu w model zadań powinny wyświetlić się wszystkie zadania wraz z ich polem nazwy oraz z deadlinem posortowanym od tych najbliższych.
 
 #### Screen z rozwiązaniem należy umieścić na upelu. </br> </br>
 
